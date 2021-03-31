@@ -9,7 +9,7 @@
 		This tutorial will explain how to setup your environment, so you can start extending conquer with plugins and similar.<br>
 		You should have a bit of experience with your OS, with installing stuff and Java.
 		<h3>Install Java</h3>
-		Conquer will always use the newest Java version available. (At the time of writing: Java 15).
+		Conquer will always use the newest Java version available. (At the time of writing: Java 16).
 		For windows, grab it from <a href="https://adoptopenjdk.net/">AdoptOpenJDK</a>. On linux use your package manager. You know what you have to do.
 		<h3>Install maven</h3>
 		Conquer uses maven for setting up the local repo, as there is no remote repository available. So download it from <a href="http://maven.apache.org/download.cgi">here</a> and
@@ -156,8 +156,8 @@
                 <pre>
 &lt;properties&gt;
   &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
-  &lt;maven.compiler.source&gt;15&lt;/maven.compiler.source&gt;
-  &lt;maven.compiler.target&gt;15&lt;/maven.compiler.target&gt;
+  &lt;maven.compiler.source&gt;16&lt;/maven.compiler.source&gt;
+  &lt;maven.compiler.target&gt;16&lt;/maven.compiler.target&gt;
 &lt;/properties&gt;
                 </pre>
                 </code><br>
@@ -169,7 +169,7 @@
   &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
   &lt;version&gt;3.8.0&lt;/version&gt;
   &lt;configuration&gt;
-  &lt;release&gt;15&lt;/release&gt;
+  &lt;release&gt;16&lt;/release&gt;
   &lt;compilerArgs&gt;
     &lt;arg&gt;--enable-preview&lt;/arg&gt;
   &lt;/compilerArgs&gt;

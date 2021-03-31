@@ -55,7 +55,7 @@ public void handle(Graph&lt;ICity&gt; allCities, Context context) {
 }
 	</pre>
 	</code><br>
-	As conquer uses the <a href="https://docs.oracle.com/en/java/javase/15/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader API</a>, you have to add a file to the generated jar file.
+	As conquer uses the <a href="https://docs.oracle.com/en/java/javase/16/docs/api/java.base/java/util/ServiceLoader.html">ServiceLoader API</a>, you have to add a file to the generated jar file.
 	Create the directory structure <code>src/main/resources/META-INF/services</code> and add a file called <code>conquer.plugins.Plugin</code> into the <code>services</code> directory.
 	These should just contain the fully qualified classname of the plugin, in this case: <code>tutorial.conquer.FirstConquerPlugin</code>.<br>
 	To create the jar file, run <code>mvn package -Dmaven.test.skip=true</code>. This will create the jar file <code>target/example-1.0-SNAPSHOT.jar</code>.<br>
