@@ -1,0 +1,31 @@
+Package: conquer
+Version: 2.0.0
+Section: games
+Architecture: arm64
+Maintainer: JCWasmx86
+Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2, libjson-glib-1.0-0
+Suggests: openjdk-15-jdk
+Description: The native parts for conquer-gui
+Installed-Size: 298
+Filename: dists/main/extras/binary-arm64/conquer-arm64.deb
+Size: 50732
+MD5Sum: c50a0c0886d76d06b36fc19acb94dc1f
+SHA1: 938fa9d7dc05af8219206178aaf4e118ac4afcc9
+SHA256: 039179cae57a2f979632742b679e4eb74b2ce0f90b3eecd054e9b83511b73734
+SHA512: 7197f34b8d87b2634f6b012ee42e76c15ee0f414eca509d9b2e7ecfc47f40c6379a19c5111bfe8658478c87403dbacd78fe292f2aeef840cfa30fa9a57404e8e
+
+Package: conquer-sdk
+Version: 2.0.0
+Section: games
+Architecture: arm64
+Maintainer: JCWasmx86
+Depends: maven
+Description: The SDK for the game engine conquer
+Installed-Size: 765
+Filename: dists/main/extras/binary-arm64/conquer-sdk-arm64.deb
+Size: 590120
+MD5Sum: 20d5a400abbf43750d262c1fc486b9d2
+SHA1: 9a25e6c98e115f7cea40fe5e1d3d61f9219bf9b6
+SHA256: e965e1c13d1a069662546319b75337ab987460cc7552e99a48bebf56214c27f9
+SHA512: 6ae17164123d750d25369ce99f8c3f9b6103adf2434de03348cf209da019253d5f897ff8ff90a438f67424cd5e1abcdce4b6bf6034f2a073160bf4318c900781
+

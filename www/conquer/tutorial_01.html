@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>Getting started</title>
+	</head>
+	<body>
+		<h2>Getting started</h2>
+		This tutorial will explain how to setup your environment, so you can start extending conquer with plugins and similar.<br>
+		You should have a bit of experience with your OS, with installing stuff and Java.
+		<h3>Install Java</h3>
+		Conquer will always use the newest Java version available. (At the time of writing: Java 15).
+		For windows, grab it from <a href="https://adoptopenjdk.net/">AdoptOpenJDK</a>. On linux use your package manager. You know what you have to do.
+		<h3>Install maven</h3>
+		Conquer uses maven for setting up the local repo, as there is no remote repository available. So download it from <a href="http://maven.apache.org/download.cgi">here</a> and
+		<a href="https://maven.apache.org/install.html">follow the instructions</a>.
+		<h3>Install the SDK</h3>
+		Go to the <a href="https://jcwasmx86.github.io/sdks/sdks.html">SDK download page</a> and download the newest version. Extract it and run either if you are on windows:<br>
+		<code>install.bat</code><br>
+		Or if you are on linux, run <code>./install.sh</code>.
+		<h3>Optional: Install an IDE</h3>
+		<a href="https://en.wikipedia.org/wiki/Integrated_development_environment">IDEs</a> help you to write programs. Consider installing one of those:<br>
+		<ul>
+			<li><a href="https://www.eclipse.org/downloads/">eclipse</a></li>
+			<li><a href="https://www.jetbrains.com/idea/download">IntelliJ Idea</a></li>
+			<li><a href="https://netbeans.apache.org/download/index.html">NetBeans</a></li>
+		</ul>
+		In the following, these tutorials will only show the commandline way, as it is universal.
+		<h3>Generating the maven project</h3>
+		To generate your maven project, run (You can change <code>tutorial.conquer</code> and <code>example</code>):<br>
+		<code>
+			mvn -B archetype:generate -DgroupId=tutorial.conquer -DartifactId=example -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4	
+		</code><br>
+		This will create this tree:<br>
+		<code>
+		<pre>
+		example/
+		├── pom.xml
+		└── src
+			├── main
+			│   └── java
+			│  	 └── tutorial
+			│  		 └── conquer
+			│  			 └── App.java
+			└── test
+				└── java
+					└── tutorial
+						└── conquer
+							└── AppTest.java
+		</pre>
+		</code><br>
+		The file <code>pom.xml</code> will have this content:
+		<code>
+		<pre>
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+
+&lt;project xmlns=&quot;http://maven.apache.org/POM/4.0.0&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;
+  xsi:schemaLocation=&quot;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&quot;&gt;
+  &lt;modelVersion&gt;4.0.0&lt;/modelVersion&gt;
+
+  &lt;groupId&gt;tutorial.conquer&lt;/groupId&gt;
+  &lt;artifactId&gt;example&lt;/artifactId&gt;
+  &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+
+  &lt;name&gt;example&lt;/name&gt;
+  &lt;!-- FIXME change it to the project's website --&gt;
+  &lt;url&gt;http://www.example.com&lt;/url&gt;
+
+  &lt;properties&gt;
+    &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+    &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;
+    &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;
+  &lt;/properties&gt;
+
+  &lt;dependencies&gt;
+    &lt;dependency&gt;
+      &lt;groupId&gt;junit&lt;/groupId&gt;
+      &lt;artifactId&gt;junit&lt;/artifactId&gt;
+      &lt;version&gt;4.11&lt;/version&gt;
+      &lt;scope&gt;test&lt;/scope&gt;
+    &lt;/dependency&gt;
+  &lt;/dependencies&gt;
+
+  &lt;build&gt;
+    &lt;pluginManagement&gt;&lt;!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) --&gt;
+      &lt;plugins&gt;
+        &lt;!-- clean lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#clean_Lifecycle --&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-clean-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.1.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;!-- default lifecycle, jar packaging: see https://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_jar_packaging --&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-resources-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.8.0&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-surefire-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.22.1&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-jar-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-install-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.5.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-deploy-plugin&lt;/artifactId&gt;
+          &lt;version&gt;2.8.2&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;!-- site lifecycle, see https://maven.apache.org/ref/current/maven-core/lifecycles.html#site_Lifecycle --&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-site-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.7.1&lt;/version&gt;
+        &lt;/plugin&gt;
+        &lt;plugin&gt;
+          &lt;artifactId&gt;maven-project-info-reports-plugin&lt;/artifactId&gt;
+          &lt;version&gt;3.0.0&lt;/version&gt;
+        &lt;/plugin&gt;
+      &lt;/plugins&gt;
+    &lt;/pluginManagement&gt;
+  &lt;/build&gt;
+&lt;/project&gt;
+		</pre>
+		</code><br>
+		Now, in order to add the required jar files, add this to <code>&lt;dependencies&gt;</code>:<br>
+		<code>
+		<pre>
+&lt;dependencies&gt;
+  &lt;dependency&gt;
+    &lt;groupId&gt;conquer&lt;/groupId&gt;
+    &lt;artifactId&gt;conquer&lt;/artifactId&gt;
+    &lt;version&gt;LATEST&lt;/version&gt;
+  &lt;/dependency&gt;
+&lt;/dependencies&gt;
+		</pre>
+		</code><br>
+		Another thing to change is the the compiler version. Replace<br>
+		<code>
+		<pre>
+&lt;properties&gt;
+  &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;maven.compiler.source&gt;1.7&lt;/maven.compiler.source&gt;
+  &lt;maven.compiler.target&gt;1.7&lt;/maven.compiler.target&gt;
+&lt;/properties&gt;
+		</pre>
+		</code>
+		with:<br>
+                <code>
+                <pre>
+&lt;properties&gt;
+  &lt;project.build.sourceEncoding&gt;UTF-8&lt;/project.build.sourceEncoding&gt;
+  &lt;maven.compiler.source&gt;15&lt;/maven.compiler.source&gt;
+  &lt;maven.compiler.target&gt;15&lt;/maven.compiler.target&gt;
+&lt;/properties&gt;
+                </pre>
+                </code><br>
+		And change the compiler plugin accordingly:
+		<code>
+		<pre>
+&lt;plugin&gt;
+  &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+  &lt;artifactId&gt;maven-compiler-plugin&lt;/artifactId&gt;
+  &lt;version&gt;3.8.0&lt;/version&gt;
+  &lt;configuration&gt;
+  &lt;release&gt;15&lt;/release&gt;
+  &lt;compilerArgs&gt;
+    &lt;arg&gt;--enable-preview&lt;/arg&gt;
+  &lt;/compilerArgs&gt;
+  &lt;/configuration&gt;
+&lt;/plugin&gt;
+		</pre>
+		</code>
+		<a href="tutorial_02.html">Building your first plugin</a>
+	</body>
+</html>

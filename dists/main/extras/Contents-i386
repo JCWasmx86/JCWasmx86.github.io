@@ -1,0 +1,13 @@
+usr/bin/conquer_launcher                                                         conquer
+usr/share/conquer/Conquer.license                                                conquer
+usr/share/conquer/LICENSE.txt                                                    conquer
+usr/bin/depreview                                                                conquer-sdk
+usr/bin/install-sdk.sh                                                           conquer-sdk
+usr/share/conquer/m2/Conquer.jar                                                 conquer-sdk
+usr/share/conquer/m2/Conquer.license                                             conquer-sdk
+usr/share/conquer/m2/ConquerFrontendSPI.jar                                      conquer-sdk
+usr/share/conquer/m2/Conquer_resources.jar                                       conquer-sdk
+usr/share/conquer/m2/LICENSE.txt                                                 conquer-sdk
+usr/share/conquer/m2/conquer-2.0.0.pom                                           conquer-sdk
+usr/share/conquer/m2/conquer_resources-2.0.0.pom                                 conquer-sdk
+usr/share/conquer/m2/conquer_spi-2.0.0.pom                                       conquer-sdk

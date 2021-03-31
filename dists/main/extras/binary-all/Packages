@@ -1,0 +1,75 @@
+Package: conquer-default-music
+Version: 2.0.0
+Section: games
+Architecture: all
+Maintainer: JCWasmx86
+Depends: conquer-engine
+Description: The default music for the game conquer
+Installed-Size: 30634
+Filename: dists/main/extras/binary-all/conquer-default-music.deb
+Size: 29199244
+MD5Sum: 997157cc6484ea25e9fb7bcc6d229731
+SHA1: cb7b3dffc47f10ac58f5f945b1ab1cd0d6e6f48d
+SHA256: 231a04c2365ab893f18010f9576e8f476e874d27defb5ed6aefcbb5469aae6bb
+SHA512: dcc63e966574efef99db34bca96adc82549624e26234ab46636d02555d3ca9a4da82632872fe5e76edd6297694a0e45f18cb31fa7b6911853ea8c9a5b65151cd
+
+Package: conquer-default-scenarios
+Version: 2.0.0
+Section: games
+Architecture: all
+Maintainer: JCWasmx86
+Depends: conquer-engine
+Description: The default scenarios for the game conquer
+Installed-Size: 405
+Filename: dists/main/extras/binary-all/conquer-default-scenarios.deb
+Size: 371680
+MD5Sum: 494813adef222d90310567d6ae052cef
+SHA1: 5a9a901d8da490071db0759b39ffe61cc8c29b71
+SHA256: 0b60280181119d8f7e94e6b74ff57a1c39d50aeb6c0794c0ddc53fc5d988ea9f
+SHA512: 18f9be59f0ec9fda102966abe94ca987f95291cd8a3911cec882d5c07898d5ca9f0444a611e14fc0a72bb70087b67327c7a0b1a0eb3d542851188d8cddaaa13a
+
+Package: conquer-default
+Version: 2.0.0
+Section: games
+Architecture: all
+Maintainer: JCWasmx86
+Depends: conquer-engine
+Description: The default plugins for the game conquer
+Installed-Size: 54
+Filename: dists/main/extras/binary-all/conquer-default.deb
+Size: 24536
+MD5Sum: 80dc64b05a169bd2b8ad2c7aaa09404f
+SHA1: fb5b2bc3f0914f12587cc987613782c004c3aa3b
+SHA256: 6dc2095122585c24d4169b32c113f2c5bd16cf2f4338418066d79562b6c07231
+SHA512: 4881ab4bde4bf24c0f1466a1559e9667802fc41756f8aa5941ac8f289af4ad64f3cbf9b7178cb68ab5bc7f93d43ab9469f3b754ca306d3fe63d991989ac7f03a
+
+Package: conquer-engine
+Version: 2.0.0
+Section: games
+Architecture: all
+Maintainer: JCWasmx86
+Depends: conquer-engine
+Description: The engine for the game conquer
+Installed-Size: 610
+Filename: dists/main/extras/binary-all/conquer-engine.deb
+Size: 573208
+MD5Sum: 58641ca9fbb83d920f1c85425f57bcbc
+SHA1: 77884827d4d1c6fd343e374dd0f4e095cfab47c1
+SHA256: 3ba9e25e9ee20db8f8ebe3fdfb007c9b9ca3fb73ef362b6b41be83acb422cbdc
+SHA512: 912097a0fddc4205912b57c7fc272b5eb555cea281a1ad195656df27a1a2facf687cb64705ee13df8ae1dce851c4a95ab4046428992c5be0e8c840443e29fd38
+
+Package: conquer-gui
+Version: 2.0.0
+Section: games
+Architecture: all
+Maintainer: JCWasmx86
+Depends: conquer-engine
+Description: The GUI for the game engine conquer (Without Launcher)
+Installed-Size: 7033
+Filename: dists/main/extras/binary-all/conquer-gui.deb
+Size: 7112436
+MD5Sum: 594e57af8104644ae138586b0f5ba4dc
+SHA1: b857567c9fdf003a12a729fade9904d9dd654216
+SHA256: 2538bf5b0a53cd4d3d28e18e4217f7a315f5fb44f65883432760d469ee6604d6
+SHA512: 38e7028c6e946ecfae593f9b234585c3925ca194e8a46adcfb5a36df9551b75918440e1f6e55eed5f4b49767f731658bcf91667fef54e122de747b095df211cd
+
