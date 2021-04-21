@@ -17,7 +17,7 @@
 		<h3>Install the SDK</h3>
 		Go to the <a href="https://jcwasmx86.github.io/sdks/sdks.html">SDK download page</a> and download the newest version. Extract it and run either if you are on windows:<br>
 		<code>install.bat</code><br>
-		Or if you are on linux, run <code>./install.sh</code>.
+		Or if you are on linux, install the <code>conquer-sdk</code> package and run <code>install-sdk.sh</code>(Requires maven)
 		<h3>Optional: Install an IDE</h3>
 		<a href="https://en.wikipedia.org/wiki/Integrated_development_environment">IDEs</a> help you to write programs. Consider installing one of those:<br>
 		<ul>
@@ -29,7 +29,7 @@
 		<h3>Generating the maven project</h3>
 		To generate your maven project, run (You can change <code>tutorial.conquer</code> and <code>example</code>):<br>
 		<code>
-			mvn -B archetype:generate -DgroupId=tutorial.conquer -DartifactId=example -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4	
+			mvn -B archetype:generate -DgroupId=tutorial.conquer -DartifactId=example -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4
 		</code><br>
 		This will create this tree:<br>
 		<code>
