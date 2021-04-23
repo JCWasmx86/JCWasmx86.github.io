@@ -1,31 +1,31 @@
 Package: conquer
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: amd64
 Maintainer: JCWasmx86
-Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2, libjson-glib-1.0-0
-Suggests: openjdk-15-jdk
+Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2
+Suggests: openjdk-16-jdk
 Description: The native parts for conquer-gui
-Installed-Size: 304
+Installed-Size: 305
 Filename: dists/main/extras/binary-amd64/conquer-amd64.deb
-Size: 53176
-MD5Sum: 0d0e28a38bf6aa14cc4e0c97e6221bbc
-SHA1: 2b3882df2a85cc325ec8456a87d55dd6d8447f69
-SHA256: 6029a0a4f954aa589ede57a017492d8c5e5659158761c822483b749581fe0bad
-SHA512: 97a391936f604ee599e8b975363dd6d0e814ecd1e2a21b36397d8875f8f8fd00731659f4185ca714d5b2c6a7235921d3314e723b74b4c06c53db84d86bcb58f1
+Size: 53596
+MD5Sum: 70a9293d0895beb7c3413d772b4896f6
+SHA1: 6694bc59c25d895669cf5e893641b38b26a6bed0
+SHA256: 0567756d86624c12552f758924683cc208897ddff878735b073256d4688b5f79
+SHA512: 4b06a9e04a889881d48c0ec124ee04359dc185e33a5a2057ed2cf50dfadc7fb30dc4bde5f7cc70e51d19e6a44565b7d7349cf985f7dfec6c0a8d86b8af8b938c
 
 Package: conquer-sdk
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: amd64
 Maintainer: JCWasmx86
-Depends: maven
+Suggests: maven
 Description: The SDK for the game engine conquer
-Installed-Size: 773
+Installed-Size: 703
 Filename: dists/main/extras/binary-amd64/conquer-sdk-amd64.deb
-Size: 590440
-MD5Sum: 6b615e6f54aefc7f787899c3066b29eb
-SHA1: 875c9eaa924d2047190eef7a964bbb5354d140a0
-SHA256: 5a8537a6f3383ce1221169cf7f61d6ef252f37b07190e84f082d8e1db5af8042
-SHA512: 401a8932f6700ccb4d513767a13cc4e22c7e488757189105e6318509214eb73286d49eaef4e8ca07c7818158abc8b575da3dde387d993207a405128ae83370cd
+Size: 517776
+MD5Sum: 120ccb720aacbbd88881dd73144c619f
+SHA1: 83a8b41d3452a86f374213deef46eac78ada3662
+SHA256: 60da1bc9773de05a54c7303e57abd55d63be9aed7588841fb44b4d8510b13c82
+SHA512: bbbf279dbceea7369aa7b96b7f2488bc487bfed83932b06ee57455808e8aadd4668015fc1a327c006b52ae528a7847cf039915bb294f6088fde676f622f399b3
 

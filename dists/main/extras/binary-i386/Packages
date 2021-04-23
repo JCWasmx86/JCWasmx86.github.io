@@ -1,31 +1,31 @@
 Package: conquer
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: i386
 Maintainer: JCWasmx86
-Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2, libjson-glib-1.0-0
-Suggests: openjdk-15-jdk
+Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2
+Suggests: openjdk-16-jdk
 Description: The native parts for conquer-gui
-Installed-Size: 302
+Installed-Size: 310
 Filename: dists/main/extras/binary-i386/conquer-i386.deb
-Size: 55360
-MD5Sum: 1f2df0f7e18cb937c0714a3cee9cb219
-SHA1: 2c19dbdcffa08c258769472546640ee3588c7985
-SHA256: 306b65331906ab9c536c466cb6b830b132fe63ffb96a2488d3cff3a18527eb2c
-SHA512: eca0df214c85951ff1ab5c347b1ca13a4b9b8cde80c989946168d891583c0eeffc3731189eb48ebe3d8e39c67d6b3d7f8258e6f19924721e0e899bfa1a1660b8
+Size: 56480
+MD5Sum: b9df530a31b99c09d0894c7743932297
+SHA1: b1b24590dc527a5094a27a847c751076e31a88af
+SHA256: 2babe2750babca16766619f2557fcf1c7f7efa9a8ab4b045ce80bfc6ce946ac4
+SHA512: e51c7e68f7f7c54ab6534170024a7094d3a9deb758ba5a43d97ebeb6d141275f667c87990673813eac5cd46069bf79b5dba25025f375187bfe8942cfc77c7809
 
 Package: conquer-sdk
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: i386
 Maintainer: JCWasmx86
-Depends: maven
+Suggests: maven
 Description: The SDK for the game engine conquer
-Installed-Size: 768
+Installed-Size: 698
 Filename: dists/main/extras/binary-i386/conquer-sdk-i386.deb
-Size: 590896
-MD5Sum: e9cef094d7bda9a18ab0cdd45cfba998
-SHA1: ba3fe4a762f2d166ebf3fb9b904af7683e9fc98e
-SHA256: 9664e0b432211b98f24b8512a3ff58ada87b93988c342e797ce6c24454b65dfc
-SHA512: c710a6715580a61d6e145d8714ed8ada07ae2e5c68407f2025d2ec15fa9af063416d0ac26e2ba8e51f1bee3c144b090f401871262146c22c2f9fa3dd252b0080
+Size: 518212
+MD5Sum: 2f8e36676cf6e0535b444a6cac76abe4
+SHA1: a93bbe7cf2a06b44cdc6b19082e3bac9467b1b13
+SHA256: fda078e07efbb71aa335b20f9da6948d99f9a048632b1a7b6df50f330861705f
+SHA512: f0bdeeef79ce3617181ebe1a3637415be87e9798cc70b4e6679192dbb5d0857324bb3f65e9a4c0e58bad765829772554ad18a692c507a4a7ea3d21402477ded6
 

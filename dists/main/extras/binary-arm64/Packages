@@ -1,31 +1,31 @@
 Package: conquer
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: arm64
 Maintainer: JCWasmx86
-Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2, libjson-glib-1.0-0
-Suggests: openjdk-15-jdk
+Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2
+Suggests: openjdk-16-jdk
 Description: The native parts for conquer-gui
-Installed-Size: 298
+Installed-Size: 302
 Filename: dists/main/extras/binary-arm64/conquer-arm64.deb
-Size: 50732
-MD5Sum: c50a0c0886d76d06b36fc19acb94dc1f
-SHA1: 938fa9d7dc05af8219206178aaf4e118ac4afcc9
-SHA256: 039179cae57a2f979632742b679e4eb74b2ce0f90b3eecd054e9b83511b73734
-SHA512: 7197f34b8d87b2634f6b012ee42e76c15ee0f414eca509d9b2e7ecfc47f40c6379a19c5111bfe8658478c87403dbacd78fe292f2aeef840cfa30fa9a57404e8e
+Size: 51360
+MD5Sum: 60a644a0171d871251114d67815b7cab
+SHA1: 9ecb3edfbc47c259f8ad261f5aa97608866f5d0c
+SHA256: 1aa94a915d27d2b3f7c88ca86814ccdedabee1fd275d326d7b565a9e31ce554e
+SHA512: 7d7e5b91a58189ba70fbe3297548d3a4d4d6636f3a37924342891fbe4c9418ca7b0c2c4b70fbea676be556849900a907474d6e6b34be5e6bd5c16b429c6a1dab
 
 Package: conquer-sdk
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: arm64
 Maintainer: JCWasmx86
-Depends: maven
+Suggests: maven
 Description: The SDK for the game engine conquer
-Installed-Size: 765
+Installed-Size: 699
 Filename: dists/main/extras/binary-arm64/conquer-sdk-arm64.deb
-Size: 590120
-MD5Sum: 20d5a400abbf43750d262c1fc486b9d2
-SHA1: 9a25e6c98e115f7cea40fe5e1d3d61f9219bf9b6
-SHA256: e965e1c13d1a069662546319b75337ab987460cc7552e99a48bebf56214c27f9
-SHA512: 6ae17164123d750d25369ce99f8c3f9b6103adf2434de03348cf209da019253d5f897ff8ff90a438f67424cd5e1abcdce4b6bf6034f2a073160bf4318c900781
+Size: 517528
+MD5Sum: 01bd1e93817c1cc40d8368a8852a8f02
+SHA1: 8be7760f4f3eba6fc8a4c6ab9e21b309fac1714d
+SHA256: 8b7fe672f19da7e43610bcaeb082909f33d57c8c33b6a90f517f8b5fff51c714
+SHA512: 017fa40e04eac10f9edeb09dc11303fb38e289a16acac0a69c564e88cf778386e04cc7eaca262a0744fad83d3a4f700af4f8f46ffa13192801b56ad02fd7037c
 

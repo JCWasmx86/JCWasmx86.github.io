@@ -8,6 +8,6 @@ usr/share/conquer/m2/Conquer.license                                            
 usr/share/conquer/m2/ConquerFrontendSPI.jar                                      conquer-sdk
 usr/share/conquer/m2/Conquer_resources.jar                                       conquer-sdk
 usr/share/conquer/m2/LICENSE.txt                                                 conquer-sdk
-usr/share/conquer/m2/conquer-2.0.0.pom                                           conquer-sdk
-usr/share/conquer/m2/conquer_resources-2.0.0.pom                                 conquer-sdk
-usr/share/conquer/m2/conquer_spi-2.0.0.pom                                       conquer-sdk
+usr/share/conquer/m2/conquer-2.1.0.pom                                           conquer-sdk
+usr/share/conquer/m2/conquer_resources-2.1.0.pom                                 conquer-sdk
+usr/share/conquer/m2/conquer_spi-2.1.0.pom                                       conquer-sdk

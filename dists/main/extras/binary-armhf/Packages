@@ -1,31 +1,31 @@
 Package: conquer
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: armhf
 Maintainer: JCWasmx86
-Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2, libjson-glib-1.0-0
-Suggests: openjdk-15-jdk
+Depends: conquer-engine, conquer-gui, libcurl4, libarchive13, libgtk-3-0, conquer-default, conquer-default-music, conquer-default-scenarios, libjson-glib-1.0-0, libgee-0.8-2
+Suggests: openjdk-16-jdk
 Description: The native parts for conquer-gui
 Installed-Size: 278
 Filename: dists/main/extras/binary-armhf/conquer-armhf.deb
-Size: 48864
-MD5Sum: 3f36bcc7179b03addd222a311ac68275
-SHA1: 4be0a5a7b155e54419d8f725494fdd751bc79442
-SHA256: 2b83d51175f8e534cb3ea7f62a164fd1e3f3b733e46d25153bca7d5eb3bae5a9
-SHA512: 8ab7ce91dbdd480d88feabd646c46e2b9e82dee065c50eeeab728fcaebdc5c4c135b46c8a7a29d45692815ff4d161fecb08879a4355286ee9ae7fd9f77467dd1
+Size: 49172
+MD5Sum: e3c75b814489349a517a3024de7194d7
+SHA1: cdf90a58338adf8b939d4c243f6335294a6dc08d
+SHA256: 37ef855a7b6017183428184814bf5423df24c838139f52b86509807a8f659d04
+SHA512: b65553e30edccd19197fac231da29290dae5c3afb110aeae7a854cb49f77df46bf427011b2695cc3fe47a2da2ea559ebdb82b7af7c8429dd4c1f73b014ccdcd7
 
 Package: conquer-sdk
-Version: 2.0.0
+Version: 2.1.0
 Section: games
 Architecture: armhf
 Maintainer: JCWasmx86
-Depends: maven
+Suggests: maven
 Description: The SDK for the game engine conquer
-Installed-Size: 764
+Installed-Size: 694
 Filename: dists/main/extras/binary-armhf/conquer-sdk-armhf.deb
-Size: 589776
-MD5Sum: 700cdd57f4175af423a3cf6f29642e05
-SHA1: 485157b91a176f27b17e30bfb8679c90d0f50748
-SHA256: 30443c3c4d641a50fe2b1ad6b04f67e6faeac6132b5e8c24aa8d31a5c03b3c77
-SHA512: ef93a0dbe54e50850d2f6911c2de95a54b50ea7dd436889cbcdf144d91c8025c39b6a4e8396d4eac25f70ff67b8eafd0d14c5775a902186b3d28bbe4737885ab
+Size: 516912
+MD5Sum: 8c6816a680bf2e1e8c30493297f24d0f
+SHA1: 26816657fcd46b23e1eb30be835ab1897ac701b1
+SHA256: 180bbff637ab0fd15629a44e68429c17015093221bb0ccda0807545ba1ab43d0
+SHA512: 01ddf740fa817b1f902691231ca73113a5f35eec41e79e7d9d6ebb30a4cbfd34845fc0dfc7114b1d68ca582cd03da07c605952bbd467657111b137712335642c
 
