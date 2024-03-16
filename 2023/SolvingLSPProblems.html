@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        Writing a meson language server -- Addressing my issues
+    </title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>Writing a meson language server -- Addressing my issues</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Problems</a><a class="list-group-item list-group-item-action" href="#list-item-2">Future of Swift-MesonLSP</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/Swift-MesonLSP.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
+        </a> <a href="/tag/Swift.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift</span>
+        </a> <a href="/tag/meson.html">
+            <span class="badge rounded-pill bg-secondary me-1">meson</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Writing a meson language server -- Addressing my issues</h1>
+<p>This will be a post for my <a href="https://github.com/JCWasmx86/Swift-MesonLSP">meson language server</a> detailing which problems I encountered and how I solved them. And I will outline the future of Swift-MesonLSP.</p><h2 id="list-item-1">Problems</h2>
+<h3>Frequent reparses</h3>
+<p>In the first few months, I simply rebuilt the entire tree (=Parsing every meson source file in a project) on every <code>textDocument/didChange</code>. If you press 5 keys a second, I will rebuild the tree 5 times. (Unless your editor
+combines them client-side, but GNOME Builder doesn't do that)</p><p>So I simply used <a href="https://developer.apple.com/documentation/swift/task"><code>Task</code>s</a>. These are simple a "unit of asynchronous work". So each time I get notified by the editor the file has changed, I will cancel the old task and start a new one.
+You just have to sprinkle a lot of <code>if Task.isCancelled {}</code> over the code in order to ensure the time spent on doing unnecessary computations is minimal. Examples for good points to do this check are:</p><ul><li><p>After parsing the meson source files</p></li><li><p>After analyzing the AST</p></li><li><p>After parsing each subproject</p></li><li><p>After clearing/sending diagnostics</p></li></ul><p>You still have the problem, that a lot of unnecessary work is done, and you can drive up the CPU usage by just typing really fast. So what's the best way to avoid that? Simply collapse "typing sequences" into just one tree-rebuild.
+The code for the task is now like this:</p><pre class="language-swift"><code>do {
+  // 100 ms
+  try await Task.sleep(nanoseconds: 100 * 1_000_000)
+} catch {
+  // Sleep was cancelled
+  return
+}
+// Rebuild the tree now.
+</code></pre><p>My experiments have shown that this reduces the number of rebuilds by a lot and thus reduces CPU Usage.</p><h3>Calculating non-constant values to <code>subdir(x)</code> and <code>(set|get)_variable(x)</code></h3>
+<p>The fact that meson allows passing strings that are not literals to <code>subdir</code>, <code>set_variable</code> and <code>get_variable</code> made my life a lot harder. But if my language server can't handle that, it would be simply useless for a lot of projects.
+Especially for a lot of projects in the GNOME space, I consider my "main" priority with everything. So I implemented a really weird interpreter. While it cannot derive <code>x</code> for every meson project, it does it for probably more than 99% of all the meson projects.</p><p>We have this code (Copied+Shortened from GLib):</p><pre class="language-meson"><code>foreach f : functions
+  if cc.has_function(f)
+    set_variable('have_func_' + f, true)
+  else
+    set_variable('have_func_' + f, false)
+  endif
+endforeach
+</code></pre><p>My code is seeing this expression in the first argument of the <code>set_variable</code> call: <code>'have_func_' + f</code>. While for the left-hand side of the binary expression, we have to do nothing, we have to find out, what <code>f</code> is. Let's derive <code>f</code>.
+We walk up, from the current line, until we encounter a definition of <code>f</code>. It's a value from the iteration over <code>functions</code>. Now let's search for functions. The fancy part is not finding the definition of <code>functions</code>, but
+all possible values. <code>functions</code> is an array of function names:</p><pre><code>functions = [
+  'accept4',
+  'close_range',
+  'copy_file_range',
+  # truncated
+]
+</code></pre><p>So far, so good. We have our strings. Now we build all possible combinations of our binary expression:</p><pre><code>'have_func_' + 'accept4' =&gt; 'have_func_accept4'
+'have_func_' + 'close_range' =&gt; 'have_func_close_range'
+'have_func_' + 'copy_file_range' =&gt; 'have_func_copy_file_range'
+</code></pre><p>Why do we still get errors? - Because of code like this:</p><pre class="language-meson"><code>if glib_conf.has('HAVE_SYS_STATVFS_H')
+  functions += ['statvfs']
+endif
+</code></pre><p>So we need to add all other values that could be possibly in this list to our <code>functions</code> list. And now we can finally derive all our values in this loop.</p><p>This interpreter is one of the things I'm most proud of. It supports even more complex cases like this one from Harfbuzz:</p><pre class="language-meson"><code>tests = [
+    'hb-shape-fuzzer.cc',
+    'hb-subset-fuzzer.cc',
+    'hb-set-fuzzer.cc',
+    'hb-draw-fuzzer.cc',
+]
+if get_option('experimental_api')
+    tests += 'hb-repacker-fuzzer.cc'
+endif
+foreach file_name : tests
+    test_name = file_name.split('.')[0]
+    set_variable('@0@_exe'.format(test_name.underscorify()), true)
+endforeach
+</code></pre><p>I've implemented a limited set of methods and functions and expressions I can evaluate. This allows me to trace <i>a lot</i> of variable transformations. (As long as they are in the same source file, as I will never walk up to the parent source file due to potential performance issues)</p><p>One disadvantage of this method is that I "pollute" the list of existing variables with variables that may never exist on some code-paths. But this is probably unavoidable.</p><h3>Creating releases</h3>
+<p>In the beginning, I just compiled a binary on Ubuntu (As it is probably universal if you ignore stuff like Alpine Linux and nixOS) and macOS and attached it to the latest release automatically. I ran my benchmarks, created a Windows binary in my Windows VM (As the GitHub Actions Runner is too weak for a release build) and there was my release. Invested time: Probably 10-20 minutes.</p><p>But then for some reason I added more supported Linux packaging/distributions: 3 Debian versions, 3 Ubuntu versions, Arch Linux AUR, Fedora COPR. My time investment into creating releases increased drastically to about 60 minutes.</p><p>I had a lot of free time for a week and decided to make it nearly automatic. <a href="https://github.com/JCWasmx86/Swift-MesonLSP/blob/main/.github/workflows/ReleaseUpload.yml">Here</a> is my result. What does it do?</p><ul><li><p>Creates Ubuntu/macOS/Windows binaries, attaches some metadata for license stuff, zips them up and attaches them to the latest release</p></li><li><p>Updates the AUR package</p></li><li><p>Updates the COPR package</p></li><li><p>Creates .deb files for Ubuntu/Debian and updates my <a href="https://github.com/JCWasmx86/swift-mesonlsp-apt-repo">apt repo</a>.</p></li></ul><p>So the amount of work I have to do is basically zero now. But you may ask: "You said Windows release builds don't work on GitHub Actions?" The magic are pagefiles.</p><pre class="language-yaml"><code>      - name: Configure pagefile
+        uses: al-cheb/configure-pagefile-action@v1.3
+        with:
+          minimum-size: 3GB
+          maximum-size: 8GB
+          disk-root: "D:"
+</code></pre><p>Just add this snippet somewhere in your workflow and, you have a bit more "RAM". Took a long time to find this action, previous attempts using Powershell weren't so successful. (For some reason the build sometimes still fails without any indication what went wrong, but that's outside my debugging capabilities)</p><p>A few weeks later, I refactored the workflows a lot more to decrease the time needed by introducing a bit more parallelism. Sure, it's probably a bit over-engineered, but where would be the fun?</p><p>The only bad aspect of this is the vendor lock-in to GitHub Actions, but if needed, I can just go back to doing some stuff manually again.</p><h2 id="list-item-2">Future of Swift-MesonLSP</h2>
+<h3>More features</h3>
+<p>I thought my language server was somewhat feature-complete, but after the inclusion in vscode-meson I got a lot of feature requests and new ideas for features:</p><ul><li><p>Semantic tokens (Shoutout to tristan957 for helping with that one) got introduced for e.g. highlighting the variables/placeholders in format strings.</p></li><li><p>A few more configuration options, like allowing to disable linting of variable names and some other special cases.</p></li><li><p>Folding ranges got implemented as it was easy and basically an effort of a few minutes.</p></li></ul><p>There are still a few things left:</p><ul><li><p>Code intelligence for wrap files (Probably implemented in December 2023)</p></li><li><p>Code intelligence for <code>meson_options.txt</code>/<code>meson.options</code> files (Will be implemented in November 2023)</p></li></ul><h3>Switching the library used for the language server</h3>
+<p>I started using the infrastructure from sourcekit-lsp, as it was basically the only maintained and easily usable implementation of the types/protocol. I could assume it was battle-hardened, as it was used by the official language server for Swift. It worked fine until the middle of October 2023. After that, the internal API was refactored heavily twice. I was able to port my language server after the first refactoring, but the second refactoring increased my porting effort so much, I gave up. Yes, I knew it was an internal API, so it's purely my fault I ended up in this position, but it was the best decision to use it when I began writing Swift-MesonLSP</p><p>So I was searching for other libraries I could use. I had a lot of luck: I found <a href="https://github.com/ChimeHQ/LanguageServerProtocol">LanguageServerProtocol from ChimeHQ</a> I already use the SwiftTreeSitter library from this organization, so basically my search was over. But I'm currently waiting for an open PR to be merged that improves the API a bit.</p><p>I hope to switch to using ChimeHQ's LanguageServerProtocol in December 2023. There are many advantages:</p><ul><li><p>API stability as I won't use an internal API anymore</p></li><li><p>Ease of contributing due to being a smaller project than sourcekit-lsp.</p></li><li><p>Reduced binary size: Pulling in sourcekit-lsp means pulling in a lot of other platform libraries from the Swift project. While I can't guess the impact in numbers, I'm sure it will reduce the binary size. That will improve the compilation and linking times.</p></li></ul><h3>Rewriting in Rust (Maybe)</h3>
+<p>I had a lot of problems with Swift: Huge compile times, a somewhat dead ecosystem/community outside of Apple and Swift on Server and huge binary sizes due to statically linking Foundation (Or shipping it as DLL)</p><p>Rust is the best choice here as opposed to other languages:</p><ul><li><p>Python: I won't write a huge program like my language server in a language without compiler (Swift-MesonLSP has 18kLOC at the time of writing) Yes, mypy exists, and it used successfully by many, but I don't like that you can mess up so much at runtime. (Except for Django, as it's the only web framework I can grasp)</p></li><li><p>C: Nope. I'm doing a lot of work with strings, and using C for that is just a vulnerability in the making. Imagine opening a malicious meson.build that exploits my language server. That's not a risk I'm willing to take. Furthermore, it would be a lot more code - probably somewhere around 100-120kLOC</p></li><li><p>Go: Solid choice, both Rust and Golang are equally good for writing language servers, but I went with Rust.</p></li></ul><p>Personally, I have a few fears with Rust:</p><ul><li><p>Borrow checker: Currently I'm doing a lot of modifying of e.g. the AST and my AST has "cycles" (Each node has a reference to the parent and to their children). If I want to rewrite it, it would be a 1-1 rewrite.</p></li><li><p>Async stuff: Every time I worked with something async in the last few months, something went wrong, or it was a lot more difficult than e.g. just using threads.</p></li><li><p>Introducing new, exciting bugs. I already invested a lot of time into the Swift version, fixing bugs, adding features. A rewrite will always bring in new bugs. (And that same argument is the reason why there are still companies running stuff on Windows 95 or Java 6)</p></li></ul><p>I won't drop everything and start rewriting Swift-MesonLSP in Rust now, (Would that be Rust-MesonLSP then?🤔) but in the coming years, it may be possible. (Earliest moment possible would be October 2024)</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>

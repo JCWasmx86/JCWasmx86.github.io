@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        Swift-MesonLSP 4.x
+    </title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>Swift-MesonLSP 4.x</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Why did I rewrite Swift-MesonLSP?</a><a class="list-group-item list-group-item-action" href="#list-item-2">Why did I choose C++?</a><a class="list-group-item list-group-item-action" href="#list-item-3">What changed?</a><a class="list-group-item list-group-item-action" href="#list-item-4">Benefits</a><a class="list-group-item list-group-item-action" href="#list-item-5">Downsides</a><a class="list-group-item list-group-item-action" href="#list-item-6">Fancy graphs</a><a class="list-group-item list-group-item-action" href="#list-item-7">Future</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/Swift-MesonLSP.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
+        </a> <a href="/tag/mesonlsp.html">
+            <span class="badge rounded-pill bg-secondary me-1">mesonlsp</span>
+        </a> <a href="/tag/meson.html">
+            <span class="badge rounded-pill bg-secondary me-1">meson</span>
+        </a> <a href="/tag/C++.html">
+            <span class="badge rounded-pill bg-secondary me-1">C++</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Swift-MesonLSP 4.x</h1>
+<p>Over the last few months I have rewritten Swift-MesonLSP in C++. In this article, I will outline why I did that, what the benefits are and what the future of Swift-MesonLSP will look like. And I will talk show you a few fancy graphs
+with comparisons.</p><h2 id="list-item-1">Why did I rewrite Swift-MesonLSP?</h2>
+<p>As you know, Swift-MesonLSP used the internal LSP Implementation from the Swift language server <code>sourcekit-lsp</code>. After a few refactorings and a lot of effort
+to adjust my language server to the API changes, I decided I'm done with it. So let's port it to another library. There is basically only one realistic alternative:
+<a href="https://github.com/ChimeHQ/LanguageServer">ChimeHQ/LanguageServer</a> I already used <code>SwiftTreeSitter</code> for the bindings to tree-sitter-meson, so I can assume these
+are high-quality bindings.</p><p>I started porting my language server to this library, but I soon hit the first roadblock: It requires Swift 5.9. Sadly it wasn't possible at this time to only target 5.9,
+as it isn't available in the Fedora repos (Only 5.8.1). <a href="https://www.massicotte.org/">Matt Massicotte</a> helped me by re-adding 5.8 support again (Thanks for that!) You would
+think that after this roadblock, it would be smooth sailing? Sadly not. I continued with my porting efforts. I made some progress and it even compiled. But then I tried to
+build the language server in release mode. And the unimaginable: The Swift compiler crashed. But only the Swift compiler in the Fedora repositories showed this behavior. But
+as I'm bound to the version from there, I again hit a dead end. And then I decided to start the rewrite earlier than planned. (The initial starting date was October 2024)</p><h2 id="list-item-2">Why did I choose C++?</h2>
+<p>I'm probably the only person on this earth that took a program in a memory-safe language and rewrote it in a memory unsafe language. Originally I planned to use
+Rust, but it wasn't compatible with my OOP+Inheritance based architecture. The issues around the Swift version were so pressing it was more important to port
+to another language than to redesign it. So I again made a list of languages that are viable.</p><ul><li><p>Rust: See above why I didn't pursue it further.</p></li><li><p>Golang: Has exactly the same issue with e.g. missing inheritance.</p></li><li><p>Vala: It would close the circle, as my first language server was written in Vala, too. But I personally don't think the language has any future outside of GNOME: In the job market, the number of companies caring about experience are
+probably some single-digit number.</p></li></ul><p>I discarded all scripting languages (E.g. Python or Typescript), as I personally think rewriting a program <i>and</i> making it slower wouldn't make sense.
+So the only language left is: C++. My prior experience with C++ was quite small, I have only interacted with C++ during my studies for three semesters. There is still
+the issue of memory-safety, but I think the number of vulnerabilities can be reduced easily by e.g. not doing manual memory-management (With <code>new</code>/<code>delete</code>), using smart
+pointers and modern C++. I outlined these design aspects I want to follow (Some are not listed here):</p><ul><li><p>Minimal number of dependencies: In the Swift version, I had the issue that due to me pulling in sourcekit-lsp, I would pull in a lot of other stuff like <code>swift-syntax</code> and a bunch of other stuff I didn't even need. That increased CI times and (probably) increased the binary size (Sadly the entire swift build system is a black box for me, so I just guess it, as it seems like <a href="https://github.com/apple/swift/issues/44104">Dead code elimination is somewhat wonky on Linux</a>)</p></li><li><p>Safety &gt; Performance: I decided to trade performance against safety. Sure if I would do manual memory management, I could probably avoid the overhead from safe pointers and so on, but you can make fewer mistakes, if the compiler/standard library does more than you.</p></li><li><p>Drop-In binary for Swift-MesonLSP: There is already a small ecosystem around Swift-MesonLSP, so in order to reduce the amount of breakage, the binary should work the same.</p></li><li><p>Modern C++ with Fedora 39 as baseline: I don't care about old operating systems. (Unless I'm paid to care about them) I want to be able to use the "fancy new stuff". For ancient systems that don't support C++23, I generate a statically linked C++ binary, so that isn't an issue. A lot of stuff from Boost is integrated into the C++ stdlib with every version, so I was even able to avoid the boost libraries as dependencies, thus simplifying distribution.</p></li></ul><p>Furthermore, I created a few goals for me to meet:</p><ul><li><p>Equal/Better performance: Any performance regression would be enough for me to consider this rewrite to be a complete and utter failure. Everybody likes fast stuff, right? And I consider the work of Christian Hergert who is speeding up all those GNOME libraries (GLib, GNOME, GTK) as some sort of motivation. Sure I probably missed a few places where I could improve the performance a lot more, but I'm quite happy with it currently.</p></li><li><p>Smaller binary: This isn't an entirely fair comparison, as Swift e.g. shipped a few MB of ICU Unicode tables (?) in a statically linked binary, but I wanted to be at least a bit smaller.</p></li><li><p>Compatibility with gcc and clang: I don't use MSVC, so I only targeted gcc and clang. <code>gcc</code>, as it's the default compiler on Linux and <code>clang</code> due to it being the default compiler on macOS.</p></li><li><p>Linux/macOS/Windows support: These are the same platforms I support with Swift-MesonLSP and a requirement for vscode-meson.</p></li></ul><h2 id="list-item-3">What changed?</h2>
+<p>There are new inlay hints for positional arguments. It can be disabled using the <code>others.disablePosargInlayHints</code> option. Another (disabled by default) option is <code>others.removeDefaultTypesInInlayHints</code>. It reduces the all inlay hints
+with types in such format:</p><pre><code>any|dict(any)|list(any)|X
+</code></pre><p>to</p><pre><code>X
+</code></pre><p>This reduces the clutter, but may show wrong inlay hints in some cases, so use it with caution.</p><p>There are two more options for the analysis:</p><ul><li><p><code>linting.disableUnusedVariableCheck</code>: This allows the user to disable emitting warnings for unused variables. This reduces the wall of warnings for some (auto-generated?) projects that have <i>a lot</i> of unused variables.</p></li><li><p><code>linting.disableArgTypeChecking</code>: Sadly the argument types I extracted from the meson source code may be inaccurate. This may cause false-positives. This option allows to disable checking the argument types until the types are fixed.</p></li></ul><p>The last huge change is the introduction of a handwritten parser. It consists of two parts: The lexer is taken (and ported to C++) from muon, the parser is taken from the mesonbuild project. It's faster than the tree-sitter
+parser and gives better diagnostics.</p><h2 id="list-item-4">Benefits</h2>
+<h3>For me</h3>
+<p>The first improvement is, that I could finally use a sane build system instead of whatever SPM is. I obviously used CMake as a build system for my meson language server, due to it being the standard build system for C++. Jokes aside, I could
+finally use meson. Generating code? - Absolutely trivial. Making switching between e.g. memory allocators possible? - Absolutely trivial. The amount of flexibility I gained is absolutely incredible.</p><p>Furthermore, I was able to improve my architecture in such a manner that now workspaces can be supported and everything is a lot more maintainable. I separated the language server into a lot of different modules and I
+control the entire stack. I have my own logging implementation, with the features I want and I have my own JSON-RPC implementation. Something's not working? - Just log all communication. I have my own abstract language server,
+that allows code reuse. (Maybe GTKCssLanguageServer?) The list of benefits for me is quite long.</p><h3>For end users</h3>
+<p>The first thing you will probably notice is the improved performance (You will see a few graphs soon). This should be quite noticeable. For reference: Parsing the biggest meson project I know - mesa with 18kLOC meson code - takes ~60ms
+to parse and analyze. The amount of resources <code>mesonlsp</code> uses should be reduced, too.</p><p>The custom parser is another huge improvement. You should now get better error messages for syntax errors instead of only <code>"Syntax error"</code>. And <code>muon</code> isn't needed anymore, as it's statically linked into <code>mesonlsp</code>.</p><h2 id="list-item-5">Downsides</h2>
+<p>If you used the AUR package or the apt repo, I have bad news. They are discontinued, unless some maintainer is found. It's just too much effort for me to manage those distribution methods. If you use the COPR, uninstall
+the <code>Swift-MesonLSP</code> package and install <code>mesonlsp</code>. (Fedora 39/40)</p><p>And the auto-completion is still not as good as in other language servers.</p><h2 id="list-item-6">Fancy graphs</h2>
+<p><img src="img/C++-Rewrite/FileSizeInMB.png" alt="File Size in MB"></p><p>The binary size you would get from e.g. the vscode-meson extension only decreased by 8%, as I always ship with full debug info. But if I would distribute stripped binaries, I could have reduced the size by 75%.</p><p>As you may know, I started with benchmarking quite early. I wrote a whole benchmarking suite that can measure the performance and the memory usage in a somewhat <del>scientific</del> reliable manner. The projects are
+split up into three kinds of projects:</p><ul><li><p>Manually selected projects: These are just a few more or less big ones: mesa, gnome-builder, QEMU, GNOME-Builder-Plugins, GTK and PostgreSQL. Each project will be parsed 100 times by the executable (It has an option for that purpose). This is measured 10 times (=Parsing 1000 times), then the average is calculated. Furthermore, the memory usage and useful statistics like number of allocations is measured using <a href="https://invent.kde.org/sdk/heaptrack">heaptrack</a>.</p></li><li><p>Miscellaneous projects: This is just a huge collection of a few dozen different meson projects. The benchmarking toolkit will only measure once, so you shouldn't give them too much value, but they can show a trend.</p></li><li><p>Collections: The biggest users of meson are probably ElementaryOS and GNOME. So I took all GNOME and all ElementaryOS Projects that use meson and parse each of them 100 times and measure the performance and the memory usage. These measurements are probably only useful for seeing trends.</p></li></ul><p>You can assume that the values from the manually selected projects are the most reliable numbers. You can find all benchmark data files <a href="https://github.com/JCWasmx86/mesonlsp/tree/main/Benchmarks">here</a>.</p><p><img src="img/C++-Rewrite/mesa-performance.png" alt="Time needed for parsing 10 * 100 times"></p><p>This shows the performance of each latest point release for each major version. (For 3.x, 3.1.2 is used, as it was the last real release) You have to divide these values by 1000 to get the time needed to parse and analyze the entire source code of mesa. For example, it only takes 30ms now
+instead of 480ms to parse and analyze mesa.</p><p><img src="img/C++-Rewrite/mesa-allocations.png" alt="Memory allocations">
+<img src="img/C++-Rewrite/mesa-temp-allocations.png" alt="Temporary memory allocations"></p><p>These are the memory allocations as measured by heaptrack. These are quite reliable numbers, as the number of allocations is basically constant, if you use the same input.</p><p><img src="img/C++-Rewrite/mesa-peak-rss.png" alt="Peak RSS">
+<img src="img/C++-Rewrite/mesa-peak-heap.png" alt="Peak Heap"></p><p>The impact on the memory usage isn't that huge in comparison to e.g. the performance improvements, but <code>mesonlsp</code> is still slightly better.</p><p><img src="img/C++-Rewrite/misc-performance.png" alt="Miscellaneous projects"></p><p>Here you can see all those miscellaneous projects that are measured once. I then sum them up to get this chart. <code>mesonlsp</code> is 14x faster.</p><p><b>Note:</b> Just because the Swift version is much slower than the C++-Version, you shouldn't assume that there is such a huge difference between every C++ and Swift program. I added some optimizations here and there and these
+made a huge difference.</p><h2 id="list-item-7">Future</h2>
+<p><code>Swift-MesonLSP</code> is dead. The project was rebranded to <code>mesonlsp</code>. In the next few months, I will create a standalone linter for meson. What I want is a single configuration file:</p><pre class="language-ini"><code>[linting]
+werror=true
+; analysis configuration
+disableUnusedVariableCheck=true
+disableArgTypeChecking=true
+
+[formatting]
+; muon configuration
+space_array=true
+kwargs_force_multiline=false
+wide_colon=false
+no_single_comma_function=false
+</code></pre><p>If you run the linter, it would automatically check the formatting and analyze the entire code. In the next step, I would create a GitHub action that would allow linting in CI.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>

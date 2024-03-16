@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        Writing a language server for Meson in Swift
+    </title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>Writing a language server for Meson in Swift</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Motivation</a><a class="list-group-item list-group-item-action" href="#list-item-2">Technical decisions</a><a class="list-group-item list-group-item-action" href="#list-item-3">Implementation</a><a class="list-group-item list-group-item-action" href="#list-item-4">Limitations of this language server</a><a class="list-group-item list-group-item-action" href="#list-item-5">Integration into IDEs</a><a class="list-group-item list-group-item-action" href="#list-item-6">Wrap-up</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/Swift-MesonLSP.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
+        </a> <a href="/tag/Swift.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift</span>
+        </a> <a href="/tag/meson.html">
+            <span class="badge rounded-pill bg-secondary me-1">meson</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Writing a language server for Meson in Swift</h1>
+<p>This is a blog post about my <a href="https://github.com/JCWasmx86/Swift-MesonLSP">language server for meson</a>, outlining the
+technical choices, difficulties, and differences in integration into different editors.</p><h2 id="list-item-1">Motivation</h2>
+<p>I already started writing a meson language server before. It was written in Vala. I chose Vala because it is
+my favorite language. (Albeit Swift endangers this status for certain applications😉)</p><p>I wanted to write a language server for meson, because it would be a cool thing to have and because it would
+be interesting to learn more about this.</p><p>My prior experience with language servers was primarily doing some hacking around the Vala Language Server.</p><p>This first attempt in Vala worked somewhat, but due to not planning things before implementing them, I had
+one huge file that implemented everything, from hovering to diagnostics. This was a mess to untangle
+and I wasn't that motivated anymore, so I moved on to other stuff.</p><p>After a few months, I revisited the idea of writing a language server, but after looking at the code I decided
+that the time needed to fix the code would be as long as writing a new one. That's why I started another
+attempt from scratch.</p><h2 id="list-item-2">Technical decisions</h2>
+<h3>Implementation language</h3>
+<p>First I checked what most language servers are written with. Microsoft has a <a href="https://microsoft.github.io/language-server-protocol/implementors/servers">listing
+of implementations together with their implementation languages</a>.
+A lot of language servers are written using either TypeScript or the language they are written for. So I made a list of languages with their pros and cons:</p><h4>Vala</h4>
+<p>Foremost: Vala is a really cool language. If I designed a language, it would be nearly a 1-1 copy of Vala. If I rewrote the language server in Vala again, I would know what I have to do, so I could probably be a bit faster. Another pro for Vala is the amount of high-quality libraries available. (Often written in C) And most of these would be already installed on the system of users if they use GNOME.</p><p>The drawbacks of Vala are that it is quite a niche language and that I know what I have to do, as I wanted to learn something new during the rewrite</p><h4>Rust</h4>
+<p>I'm sure a lot of people would think of using Rust here. The strength of rust are its ecosystem and the safety guarantees. (And its cute mascot🦀)</p><p>Now to the downsides: I once contributed a minimal amount of code to a rust program. The compile times made me - besides not that much free time - stop contributing there. I did a change, waited a few minutes for a recompile and then had to test my changes. As my programming style depends on very quick compile-test cycles, this was really annoying.</p><p>Another aspect I don't like about rust is the size of dependency trees. In this aspect it's like a less bad version of NPM.</p><h4>C</h4>
+<p>It's a fun language, with a good and wide ecosystem of libraries. With C I could probably reduce memory usage to a minimum and have the best performance.</p><p>While C is a good language, it's showing its age. Manual memory management is something that often goes wrong. C Strings are awful.</p><h4>Javascript/Typescript</h4>
+<p>A lot of language servers are written in JS/TS. That means there are battle-tested implementations of the LSP. Couple that together with the huge ecosystem, and you probably could write a language server quite quick.</p><p>The drawbacks are numerous: No types in JS, NPM with its huge dependency trees (Couple that e.g. typo squatting, and you have a huge problem. That's also a reason why I'm hesitant to use Node.js based programs)</p><h4>Swift</h4>
+<p>I always wanted to look into using Swift, even if I don't even use any Apple device. Swift compiles to native code, an aspect I really like, and it is memory-safe unlike C. You have a huge ecosystem, and you can - if needed - easily bind C libraries.</p><p>The drawbacks are obvious: It's still an Apple-first language. A lot of tooling is only on macOS. Just a minimal amount of Linux systems have Swift compilers installed as opposed to e.g. rustc, gcc, etc.</p><p>But as it compiles to native code, I can often reuse tooling from C like Sysprof/Heaptrack. The symbols may be mangled, but demangling is just one patch away.</p><h4>Python</h4>
+<p>For some people Python may be the obvious choice, as meson uses it, too and e.g. the parser could be reused. Couple it with the huge ecosystem, and you could write a language server probably a lot faster than in other languages.</p><p>The disadvantages are obvious. Python is simply slow. It's good for gluing together native libraries (See the ML ecosystem) or doing things that are e.g. IO/Network-bound, not CPU bound.</p><p>After looking around what languages I should use, I decided to use Swift. While I ruled out Rust for now, I will give it a second chance at some later point in other programs.</p><h3>Parsing</h3>
+<p>I just decided to use a tree-sitter based parser as I did before. For that, I reused <a href="https://github.com/bearcove/tree-sitter-meson">this one</a> and
+forked it for some bug fixes. A package for Swift was used that has bindings to the C API.</p><p>At some point, I will try to use a custom parser (Given it outperforms tree-sitter in every aspect), but that is a task for later versions.</p><h3>JSON-RPC Server</h3>
+<p>For that, I just decided to reuse as much as possible from the Swift language server (sourcekit-lsp), as it is a very stable and battle-hardened implementation. It allowed me to reuse the JSON-RPC implementation, the plumbing for making the language server work and the type definitions that allow to automatically (de-)serialize JSON.</p><h2 id="list-item-3">Implementation</h2>
+<p>I implemented the language server in several modules:</p><ul><li><p><code>Swift-MesonLSP</code>: Just contains the CLI interface that starts the language server and some other tasks like testing.</p></li><li><p><code>MesonAST</code>: Contains the AST-Nodes, the type definitions, and some machinery to convert a string/file to an AST</p></li><li><p><code>MesonAnalyze</code>: Is responsible for stitching together a tree. It starts at the root file, extracts an AST from it, and for each <code>subdir('somedir')</code>, it parses the corresponding
+<code>meson.build</code> file and patches the AST to reference this source file. Furthermore, this module contains the type analyzer that annotates each node with the possible resulting types, emits diagnostics, and caches metadata for language server usage. (This tree is called <code>MesonTree</code>)</p></li><li><p><code>LanguageServer</code>: Combines <code>MesonAST</code> and <code>MesonAnalyze</code></p></li></ul><p>Sadly getting all the type definitions for the meson API can't be automated. So I was forced to manually extract all possible arguments with all their possible types from the meson source code.
+Meson can generate a JSON file with the API description, but sadly this is only implemented for the "core" functions and objects, while for modules the input YAML file is not written yet.
+That's why I had to manually copy the documentation for hovering, too.
+So it is possible, that there are some minor mistakes, but over time this should be fixable.</p><p>The entire flow for building a <code>MesonTree</code> is this:</p><ol><li><p>Parse source file using tree-sitter, returning a tree-sitter node</p></li><li><p>Convert tree-sitter node to an AST implemented in Swift for ease of use</p></li><li><p>Walk over it to find <code>subdir</code> calls.</p></li><li><p>For each subdircall:</p></li></ol><ul><li><p>Go to (1)</p></li><li><p>Patch the call to reference the source file</p></li></ul><ol><li><p>Traverse the AST and annotate all nodes with their possible types, collect diagnostics and metadata</p></li></ol><p>To avoid the mistakes of the first language server, I made a lot of work based on visitors that traverse the AST, allowing me to split up the work into several files.</p><h3>First naive implementation</h3>
+<p>I just decided to use the same approach for parsing as the first language server:
+As soon as I get a <code>textDocument/didChange</code> notification, I reparse the tree and do the type checking, etc... Yes, this seems
+to be inefficient and it was inefficient.</p><p>Another thing I noticed was the high memory usage. Each time I created a <code>MesonTree</code>, the memory usage rose by a few hundred MB.
+A language server for a <i>buildsystem</i> shouldn't use 10GB of RAM.</p><p>That was the first time I read about memory management in Swift. Long story short, Swift has basically two types:</p><ul><li><p>Classes: Reference counted</p></li><li><p>Value types: E.g. integers, <code>struct</code>s. These are always copied.</p></li></ul><p>I checked what I used for all type definitions and changed them from <code>class</code> to <code>struct</code>, as I probably had some reference cycles
+in the type definitions.
+Sure this probably came with a minor performance overhead due to copying, but I decided that for now, this fix is good enough. Base memory usage was depending on the project size
+between 60MB and 180MB, just slowly rising with each reparse. (To compare: My Vala implementation was somewhere between 2MB and 10MB)</p><p>Another aspect of reducing memory leakage was simply caching a <code>TypeNamespace</code> (Contains all functions/types known to meson)</p><p>Until I released Version 1.0, I was not capable of improving the performance or memory usage. An attempt to cache parts of the AST was failing due to a lot of
+concurrency bugs etc... I created an instrumentation module that allows me to measure and aggregate the performance of certain sections in the code. I expose
+this information using a web server on <code>localhost:65000</code>.</p><p>But as soon as I had the features I set for 1.0 I released it despite these flaws, as the performance was good enough for small projects (&lt;5KLOC)</p><h3>Improving memory usage and performance</h3>
+<p>Swift was created by Apple. A consequence of this is that a lot of tooling is only available on macOS. The best thing about native executables is, that
+you can often reuse C tooling with just some minor drawbacks (E.g. missing demangling of names).</p><p>What do we need to reduce memory usage and improve performance? - Measurements.</p><p>In my toolbelt there are two tools that I use for C and Vala:</p><ul><li><p>Heaptrack for tracking allocations</p></li><li><p>Sysprof for profiling and tracking allocations</p></li></ul><p>There is some overlap, but some aspects of Heaptrack regarding the listing of allocations are a bit better than in Sysprof.</p><p>So I ran my program using Sysprof and got somewhat expected results: A lot of the allocations come from the <code>MesonAST</code> module, especially the type definitions.
+Another major factor in the number/size of the allocations was the copying of all the <code>struct</code>s.</p><p>A minor excurse: At that point, I simply decided to add support for Swift demangling in Sysprof, as it was annoying having to read all mangled symbol names. Sadly I have not found a good way for demangling without starting a process for each symbol name or pulling in LLVM, that's why I didn't attempt to upstream it.</p><p>Back to those type definitions. For each meson object type, I created a corresponding Swift struct/class for some convenience.</p><p>Suppose you have some meson type <code>foo</code>. It has a method <code>bar</code>, taking a few arguments like this:</p><pre class="language-meson"><code>bool|int|str foo.bar(bool|int|str a,
+                     dict(str)|list(str)|env b,
+                     c: int)
+</code></pre><p>So each time, I instantiated a <code>foo</code> object, all method definitions would be recreated.
+This means:</p><ul><li><p>2 <code>bool</code>-Objects</p></li><li><p>3 <code>int</code>-Objects</p></li><li><p>4 <code>str</code>-Objects</p></li><li><p>1 <code>dict</code>-Object</p></li><li><p>1 <code>list</code>-Object</p></li><li><p>1 <code>env</code>-Object
+This goes on recursively. <code>bool</code> has some methods taking/returning <code>str</code>. That means a few more <code>str</code>-objects.
+So instead of having just one instance of each type, I have probably several thousand, especially of e.g. <code>bool</code>, <code>int</code>, or <code>str</code>.</p></li></ul><p>So I moved the methods from the <code>struct</code>s to <code>TypeNamespace</code> as a dictionary <code>[String: [Method]]</code>. That still created a lot of objects,
+but reduced the memory increase during each parsing process by a huge margin.</p><p>I continued with my journey to reduce memory usage or improve performance. In the <code>TypeAnalyzer</code> the most allocations occur. I wanted to reduce them, so I looked around and decided to try
+converting all my meson type structs to classes. This had the opposite effect, as classes are bigger than structs due to the need for a bit of book-keeping (E.g. ref-counting). So I went
+to my <code>TypeNamespace</code> and instead of creating those thousands of objects, I created just one instance of each class (Except dicts/lists, as they can have different child types) and reused it. This reduced memory usage and increased
+performance by a wide margin.</p><p>I did (somewhat unscientific) measurements you can see in the <a href="https://github.com/JCWasmx86/Swift-MesonLSP/releases/tag/v1.1">Changelog</a> and released 1.1.</p><h3>Improving the performance further.</h3>
+<p>There was still the problem, that if you typed fast (Let's say <code>n</code> letters), the entire tree was reparsed <code>n</code> times.</p><p>This was a huge problem, as those seem to reduce the performance of each other. For example, just parsing once took 700ms,
+but parsing <code>n</code> times concurrently needed 1.3s.</p><p>So as a first measure, I decided to cache the AST that is created from the tree-sitter nodes. I just did that for unopened <code>meson.build</code> files,
+as I can assert that they are unchanged (Ignoring on-disk modifications without the editor, maybe implementing cache invalidation could help)</p><p>This reduced the time to rebuild the <code>MesonTree</code> by 30% at best, depending on several factors like the number of open files in the editor.</p><p>But still, I had the problem with unnecessary reparses. So I just added an atomic counter, each time I started to rebuild the tree, I incremented it
+and stored the new value in a local variable.
+After each step, I checked, whether the counter was equal to the local variable. If not, I canceled the process.</p><h3>Monitoring the performance and memory usage</h3>
+<p>Now after all these optimizations, I had to introduce a way to find regressions easier. So I added a CI workflow on Github Actions,
+that uses the language server and parses some projects, measuring the time needed, the number and amount of allocations outputting a
+JSON file. This JSON file is pushed to another repo. Currently, I have no use for that data, but I plan to write an HTML-Generator for
+shiny graphs. While it is not entirely accurate (Sometimes the workflow takes 50 minutes, sometimes an hour) it will show major regressions.</p><p>Just for the releases, I did it manually. You can find the dashboard here: <a href="https://github.com/JCWasmx86/Swift-MesonLSP/tree/master/Benchmarks">https://github.com/JCWasmx86/Swift-MesonLSP/tree/master/Benchmarks</a> (Just run <code>make serve</code> and open your browser at <a href="http://0.0.0.0:8000/">http://0.0.0.0:8000/</a>)</p><h2 id="list-item-4">Limitations of this language server</h2>
+<p>At least at this point, I don't want to implement an interpreter for meson.</p><h3>set_variable/get_variable</h3>
+<p>Meson has support for dynamically creating variables:</p><pre class="language-meson"><code>set_variable('abc', 1)
+# abc exists now 
+</code></pre><p>My language server is able to recognize this pattern and evaluate it correctly, but for example for this code (From Glib), it will fail:</p><pre class="language-meson"><code>foreach f : functions
+  if cc.has_function(f)
+    set_variable('have_func_' + f, true)
+  else
+    set_variable('have_func_' + f, false)
+  endif
+endforeach
+</code></pre><p>Without an interpreter, it's impossible to tell if e.g. this code is correct:</p><pre class="language-meson"><code>x = have_func_strcpy
+</code></pre><p>For now, the language server will emit an error, as <code>have_func_strcpy</code> was not found.</p><h3>subdir</h3>
+<p>Another bit of example code (From GTK) where the missing interpreter is showing:</p><pre class="language-meson"><code>foreach backend : ['broadway', 'wayland', 'win32', 'x11', 'macos']
+  if get_variable('@0@_enabled'.format(backend))
+    subdir(backend)
+    gdk_deps += get_variable('gdk_@0@_deps'.format(backend))
+    gdk_backends += get_variable('libgdk_@0@'.format(backend))
+    # Special-case this for now to work around Meson bug with get_variable()
+    # fallback being an empty array, or any array (#1481)
+    if backend == 'wayland'
+      gdk_backends_gen_headers += get_variable('gdk_@0@_gen_headers'.format(backend))
+    endif
+  endif
+endforeach
+</code></pre><p>Especially not being capable of following these <code>subdir</code> calls causes a lot of issues, if variables defined there are simply missing.</p><h3>Solving these issues without interpreting.</h3>
+<p>An limited interpreter could solve this, but that's something I currently don't have the time to do.</p><p>But for later releases it is probably a requirement that I don't miss any <code>(s|g)et_variable/subdir</code> calls.</p><h2 id="list-item-5">Integration into IDEs</h2>
+<h3>GNOME-Builder</h3>
+<p>I used GNOME-Builder for writing this project. Obviously, I need a plugin to test my server.</p><p>Adding support for a language server to GNOME Builder is quite easy.</p><h4>As an external plugin</h4>
+<p>Here the most difficult or time-consuming part is not implementing the plugin, but setting up the build system.
+Luckily I have <a href="https://github.com/JCWasmx86/GNOME-Builder-Plugins">a repo with my personal plugins</a>, so I didn't have to implement that from scratch.</p><p>You need two components: A shared object to load and a plugin description file</p><p>The shared object contains</p><pre class="language-vala"><code>// A helper function, implemented in C
+[CCode (cname = "bind_client")]
+extern void bind_client (Ide.Object self);
+public class MesonService : Ide.LspService {
+    construct {
+        this.set_program ("Swift-MesonLSP");
+    }
+
+    public override void prepare_run_context (Ide.Pipeline pipeline, Ide.RunContext run_context) {
+        run_context.append_argv ("--lsp");
+    }
+
+    public override void configure_client (Ide.LspClient client) {
+        client.add_language ("meson");
+    }
+}
+
+public class MesonDiagnosticProvider : Ide.LspDiagnosticProvider, Ide.DiagnosticProvider {
+    public void load () {
+        bind_client (this);
+    }
+}
+// ... some more classes ...
+public void peas_register_types (TypeModule module) {
+    var obj = (Peas.ObjectModule) module;
+    obj.register_extension_type (typeof (Ide.DiagnosticProvider), typeof (MesonDiagnosticProvider));
+    // ... some more classes ...
+}
+</code></pre><p>The plugin description file contains:</p><pre class="language-ini"><code>[Plugin]
+Authors=JCWasmx86
+Copyright=JCWasmx86
+Description=Language server integration for meson
+Loader=C
+Module=mesonlsp
+Name=MesonLSP
+X-Category=lsps
+X-Hover-Provider-Languages=meson
+X-Symbol-Resolver-Languages=meson
+X-Symbol-Resolver-Languages-Priority=800
+X-Highlighter-Languages=meson
+X-Highlighter-Languages-Priority=100
+X-Formatter-Languages=meson
+X-Completion-Provider-Languages=meson
+X-Builder-ABI=SOMEVERSION
+</code></pre><p>Compile it, copy it to the correct location and that's it! That's trivial</p><h4>Upstream</h4>
+<p><i>Note</i> My language server has no integration upstream yet, but for the sake of a complete entry I added this section.</p><p>You just need three components. (Shown here for the Vala language server):</p><p>A <code>settings.json</code></p><pre class="language-json"><code>{
+  "vala-language-server" : {
+  }
+}
+</code></pre><p>A <code>vala-language-server.gresource.xml</code>:</p><pre class="language-xml"><code>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;gresources&gt;
+  &lt;gresource prefix="/plugins/vala-language-server"&gt;
+    &lt;file&gt;vala-language-server.plugin&lt;/file&gt;
+    &lt;file&gt;settings.json&lt;/file&gt;
+  &lt;/gresource&gt;
+&lt;/gresources&gt;
+</code></pre><p>and the most interesting thing: <code>vala-language-server.plugin</code>:</p><pre class="language-ini"><code>[Plugin]
+Authors=Princeton Ferro, Ben Iofel, Christian Hergert
+Copyright=Copyright © 2020 Princeton Ferro, Ben Iofel, Copyright © 2022 Christian Hergert
+Description=Vala code intelligence provided by vala-language-server
+Embedded=ide_lsp_plugin_register_types
+Module=vala-language-server
+Name=Vala Language Server
+Website=https://github.com/vala-lang/vala-language-server
+X-Category=lsps
+X-Code-Action-Languages=vala
+X-Completion-Provider-Languages=vala
+X-Diagnostic-Provider-Languages-Priority=100
+X-Diagnostic-Provider-Languages=vala
+X-Formatter-Languages-Priority=100
+X-Formatter-Languages=vala
+X-Highlighter-Languages-Priority=100
+X-Highlighter-Languages=vala
+X-Hover-Provider-Languages=vala
+X-LSP-Command=vala-language-server
+X-LSP-Languages=vala;genie;
+X-LSP-Settings=settings.json
+X-Rename-Provider-Languages=vala
+X-Symbol-Resolver-Languages-Priority=100
+X-Symbol-Resolver-Languages=vala
+</code></pre><h3>Kate</h3>
+<p>I've used Kate before, but haven't integrated a language server yet. It was just a matter of a few lines of JSON:</p><pre class="language-json"><code>{
+  "servers": {
+    "meson": {
+      "command": [
+        "Swift-MesonLSP",
+        "--lsp"
+      ],
+      "rootIndicationFileNames": [
+        "meson.build",
+        "meson_options.txt"
+      ],
+      "url": "https://github.com/JCWasmx86/Swift-MesonLSP",
+      "highlightingModeRegex": "^Meson$"
+    }
+  }
+}
+</code></pre><p>Even easier than in GNOME Builder. That's well done.</p><h3>Neovim</h3>
+<p>While testing a bit around, what editors support LSP, I found that editor. A few people
+I know use it, so I decided to give it a try.
+It was adding this JSON to <code>:CocConfig</code>:</p><pre class="language-json"><code>{
+    "languageserver": {
+        "meson": {
+            "command": "Swift-MesonLSP",
+	    "args": ["--lsp"],
+	    "rootPatterns": ["meson.build"],
+            "filetypes": ["meson"]
+        }
+    }
+}
+</code></pre><p>Quite easy.</p><h3>VSCode</h3>
+<p>I expected a low-code solution like in Kate or GNOME-Builder, as VSCode seems to be strongly related to the language server protocol.
+Either I didn't find a way (I don't use VSCode and don't like it that much if I have to use it) or there is none.</p><p>I decided to fork the meson VSCode extension and just copied whatever the extension for the vala-language-server did. It did spawn,
+but sadly I always got the error that a <code>Content-Length</code> header is expected. This caused me a lot of headaches, as my language server worked in Kate
+and GNOME Builder. In the end, it was a misplaced log statement before I redirected all output that would have gone to stdout to stderr. (Neovim reuses
+the implementation and didn't work until I fixed this)</p><p>Yes, it was just a bit of code to get it running, but it was still the most difficult and annoying integration I tested. To be fair, this is probably partially
+due to the ecosystem, as I try to avoid everything around NPM/JS/TS, unless necessary.</p><h3>Conclusion</h3>
+<p>Kate, and Neovim are trivial, GNOME-Builder requires a bit of setup, and VSCode is a lot to write. On a scale from 0-10, how easy it is (10=Trivial) from the POV
+of somebody who never did that:</p><ul><li><p>Kate: 10</p></li><li><p>Neovim: 10</p></li><li><p>GNOME-Builder: 7-9 (Depending on the method used)</p></li><li><p>VSCode: 5</p></li></ul><h2 id="list-item-6">Wrap-up</h2>
+<p>During writing this language server I learned a lot about Swift and its memory management, and I experimented with different editors. I will try to use Swift
+for more programs in the future (Except for GTK-based programs, there I will continue to use Vala). I think as my first big Swift project it turned out
+to be quite usable. I've just written one small (2KLOC) project before to test the waters.</p><p>The most important thing I learned was how to use a Profiler efficiently, as that knowledge is universally applicable to every language.</p><p>I will continue my journey to make this program a high-performance, low memory-usage language server.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>

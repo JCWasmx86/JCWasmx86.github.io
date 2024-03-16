@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        Reflection - Swift and Meson language server
+    </title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>Reflection - Swift and Meson language server</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Reflection - Swift</a><a class="list-group-item list-group-item-action" href="#list-item-2">Reflection - Meson language server</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/meson.html">
+            <span class="badge rounded-pill bg-secondary me-1">meson</span>
+        </a> <a href="/tag/Swift-MesonLSP.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
+        </a> <a href="/tag/Swift.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Reflection - Swift and Meson language server</h1>
+<p>I did the first commit to Swift-MesonLSP on January 4th 2023. Except one small program I wrote in Swift, I've
+never worked with it before. Now nearly 20 kLOC later, I want to reflect a bit about the usage of Swift for my
+Meson language server.</p><h2 id="list-item-1">Reflection - Swift</h2>
+<h3>Why did I choose Swift</h3>
+<p>I outlined my choice a bit further <a href="https://jcwasmx86.github.io/2023/WritingALanguageServerForMeson.html">here</a>, but the summary is basically this:</p><figure class="text-end"><blockquote class="blockquote"><p><p>Swift compiles to native code, an aspect I really like, and it is memory-safe unlike C. You have a huge ecosystem, and you can - if needed - easily bind C libraries.</p></p></blockquote></figure><h3>What was good?</h3>
+<p>The IDE setup was basically trivial. I just had to write a few plugins for GNOME Builder to set up <code>swift-format</code>, <code>swiftlint</code> and the Swift language server
+<code>sourcekit-lsp</code>. (Shoutout to <a href="https://gitlab.gnome.org/chergert">Christian Hergert</a> for making plugins so nice and easy to write!)
+These plugins landed in upstream Builder later on, except the integration for sourcekit-lsp, as it was added independently.</p><p>The language itself is quite readable and powerful. The compiler generates quite fast code, despite the ARC. (It's around 15-18% of the runtime)</p><p>Furthermore, the ecosystem is quite evolved. I never had the feeling that I have to reimplement some basic stuff. Sure some things are quite weird design choices
+in my opinion. Why is logging not in the standard library or Foundation? Same for cryptographic operations like hashing.</p><p>Another aspect I like are the small dependency graphs. In other languages (Looking at you JS and Rust), adding one new dependency can pull in a dozen of new dependencies,
+I like it, as it makes auditing the code and the dependencies easier.</p><h3>What was bad?</h3>
+<p>The tooling on Linux was rather mixed. I had the lldb debugger (From the swift-lang package) crashing multiple times during printing a backtrace, when my language server crashed.
+The normal lldb and gdb worked fine, albeit the name mangling makes things difficult to read.</p><p>The Windows support could be described as experimental at best. I have CI builds failing without any apparent reason, even in a debug build. I tried release builds before, but they
+all stopped at some point. Just after a few weeks I was able to find the root cause: It's not enough RAM available in the GitHub Actions runners. I had a few very weird crashes I couldn't
+track down, except forking a dependency and removing support for a feature. (It was just an ancient encoding, so no big loss)</p><p>Static linking <code>FoundationNetworking</code> is weird. I want to link everything statically, as the amount of Linux users having Swift installed is probably just a rounding mistake. This worked fine, until
+I needed to download files for the wrap support. Statically linking <code>FoundationNetworking</code> requires you to statically link libcurl. First of all most distributions have no static libcurl and statically
+linking it sounds like a huge mistake from a security perspective. What if there is a critical vulnerability? That's why I now rely on the fact that there is probably <code>curl</code> or <code>wget</code> installed. It works
+on all major operating systems and is a good compromise for now.</p><p>The compilation time is quite long, as it is basically the case for every "modern" language that depends on LLVM. This increases the iteration times, which my usual workflow depends on to be low.</p><p>The Swift Package Manager is - to say it politely - disappointing. I wanted to embed a file into the binary. That's a task you probably need for a lot of programs. But there was no straightforward way.
+One suggestion was to write a SPM-Plugin. Sadly the API is quite weird, and I simply used a worse solution by using a hackier solution (=Don't use a file, embed the information in a source file) Another aspect
+that is missing is installation support. Why is there no <code>swift install</code> that copies the binary to <code>$PREFIX/bin</code> or some other specific location. Every other build system does this. Meson, CMake, cargo, go etc.</p><h3>What would I do different?</h3>
+<p>To be honest, I wouldn't use Swift anymore for this use case. I have a somewhat broken debugger, something that's a basic that should work. SPM that I'm required to use as the language server does not support anything else
+is basically unusable for everything that does over "Here's the code, here are the tests, do compile them and then test it!". Cross-platform support is mediocre at best. macOS works perfectly, Linux has tooling
+issues and Windows is basically broken in some aspects.</p><p>I think my choice for another language would be either Vala, as the glib-jsonrpc optimizations are quite cool, tooling works as expected, I have a great build system or Rust because its memory safety, its
+(sadly somewhat drama-prone) community and the ecosystem.</p><p>Sure, Swift was fun, but I don't see myself writing another cross-platform CLI tool in it in a near future. Maybe doing web stuff with vapor? - Yes. Doing weird stuff with GTK and Swift? - Yes.
+But anything else? - At the time of writing, no.</p><h2 id="list-item-2">Reflection - Meson language server</h2>
+<h3>Current status</h3>
+<p>My language server is completed from an editor POV. I implemented basically all features that are useful in a meson context.</p><ul><li><p>Diagnostics</p></li><li><p>Auto-completion</p></li><li><p>Renaming</p></li><li><p>Codeactions</p></li><li><p>Hover with documentation</p></li><li><p>Go-to definition</p></li></ul><p>Internally I've set up a benchmark suite that monitors memory usage for a few selected projects and the performance for a huge number of projects. (300 kLOC) These include
+all GNOME projects, all ElementaryOS projects and a few other codebases.</p><p>I'm currently setting up automated LSP tests that emulate an editor. This will help to find more bugs and ensures there are no regressions.</p><h3>What did work fine?</h3>
+<p>I think my architecture is well-structured into several modules. I'm monitoring the performance of my application all the time. This means there are no unexpected performance regressions
+in the releases. I've setup regression testing. For guessing the possible values in <code>subdir(x)</code>, where x is not a constant I've extracted real word samples and added them to my test suite.</p><p>Furthermore, I found my own development style for all the stuff around release management and feature sets. (Think of it as some very weird combination of waterfall and agile models)</p><h3>What didn't work fine?</h3>
+<p>Some parts of my architecture are simply badly designed. The <code>MesonDocs</code> module is basically the documentation embedded as <code>Map&lt;string,string&gt;</code>. I wanted to move the documentation
+to a JSON file, embed it and load it at runtime, but sadly I wasn't able to do this due to SPM being weird.</p><p>The same for the listing of methods and functions. It's currently a 4.5kLOC file that contains all parameters and return types of each function/method. I would like to move it to an external
+file and embed it into the binary, but it's the same issue as above.</p><p>Furthermore, many files are quite long. I have several files with more than a thousand LOC, e.g. the type analyzer or the file that glues everything together.</p><p>The last bad aspect is the lack of automatic language server testing, but I'm currently working on it.</p><h3>Outlook</h3>
+<p>My language server is complete from a feature POV. What does this mean? - In future there will be fewer releases (Think of once every two to three months, instead of several each month).
+I will only fix bugs and update the docs and the function definitions for meson. But it does not mean the feature set is frozen, instead features will only be added on demand. But contributions,
+as long as they follow certain standards will still be accepted.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>
