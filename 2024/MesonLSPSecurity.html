@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        MesonLSP and Security
+    </title>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>MesonLSP and Security</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Introduction</a><a class="list-group-item list-group-item-action" href="#list-item-2">Setup</a><a class="list-group-item list-group-item-action" href="#list-item-3">Attacks based on the source code of a meson project</a><a class="list-group-item list-group-item-action" href="#list-item-4">Risks of a compromised account</a><a class="list-group-item list-group-item-action" href="#list-item-5">Mitigations</a><a class="list-group-item list-group-item-action" href="#list-item-6">Possible improvements</a><a class="list-group-item list-group-item-action" href="#list-item-7">Fazit</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/mesonlsp.html">
+            <span class="badge rounded-pill bg-secondary me-1">mesonlsp</span>
+        </a> <a href="/tag/IT-Security.html">
+            <span class="badge rounded-pill bg-secondary me-1">IT-Security</span>
+        </a> <a href="/tag/C++.html">
+            <span class="badge rounded-pill bg-secondary me-1">C++</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">MesonLSP and Security</h1>
+<h2 id="list-item-1">Introduction</h2>
+<p>Less than three days ago, <a href="https://www.openwall.com/lists/oss-security/2024/03/29/4">a backdoor in xz-utils was disclosed</a>.
+It was quite sophisticated, planned for a long time, and only found through something even more unlikely than Bilbo's chance encounter with the One Ring in the depths of Gollum's cave.</p><p>As I am studying IT-Security, I thought analyzing ways mesonlsp could be used for attacks and outlining possible scenarios in which a compromised executable could damage systems would be an interesting exercise.</p><h2 id="list-item-2">Setup</h2>
+<h3>Linux</h3>
+<p>For Linux, there are two ways to install <code>mesonlsp</code>:</p><ul><li><p>Use the statically linked binary (used by vscode-meson)</p></li><li><p>Use the package manager of your distribution (Fedora COPR, AUR, and soon nixOS)</p></li></ul><h3>macOS</h3>
+<p>There is only a nearly statically linked binary available, with a lot of libraries being built by the Homebrew team.</p><h3>Windows</h3>
+<p>There is only a zip file available that contains <code>mesonlsp.exe</code> and a bunch of DLL files, all of which are built by the MSYS2 project.</p><h2 id="list-item-3">Attacks based on the source code of a meson project</h2>
+<p>A Meson project consists of basically three components:</p><ul><li><p>Source code</p></li><li><p><code>meson.build</code> files</p></li><li><p>Subprojects (<code>*.wrap</code> files)</p></li></ul><p>The source code can be ignored for our purposes, as I don't even touch these files. In the following, I'll assume that the victim opens a project created by the attacker (e.g., for code reviews).</p><h3>Attacking with meson.build files</h3>
+<p>The first thing I do with these files is parse them. There are two ways to do this:</p><ul><li><p>Using a tree-sitter based parser (somewhat deprecated/obsolete): This is a bunch of auto-generated opaque code written in C. I can only hope it's valid, but there can always be bugs with the code-generation of <code>tree-sitter</code>.</p></li><li><p>Using a custom parser (ported from <code>muon</code> and <code>meson</code>): These are hand-written ports of the <a href="https://github.com/JCWasmx86/mesonlsp/blob/main/src/libparsing/lexer.cpp">lexer</a> from muon and the <a href="https://github.com/JCWasmx86/mesonlsp/blob/main/src/libparsing/parser.cpp">parser</a> from meson. They are written in C++, so not in a memory-safe language.</p></li></ul><p>I will concentrate on the custom parser, as it's the default parser and I have more control over it.</p><p>If the attacker is able to trigger undefined behavior (e.g., out-of-bounds access/write) and exploit it,
+it could be possible to execute arbitrary code or crash the server. Furthermore, the parser from <code>muon</code> is used for implementing the formatting of Meson files, so there may be potential vulnerabilities there as well.</p><p>The most critical component is the lexer, as it converts human-written free-form text (computers hate that!) into fancy tokens that are much easier to work with. Therefore, there may be bugs related to string handling. Using memory-unsafe languages for string handling is a recipe for a high-severity CVE (8.0+). I think the parser is less vulnerable, as it's basically just traversing the tokens and building a tree from them. In the worst case, it would probably just crash.</p><h3>Attacking with subprojects</h3>
+<p>Subprojects allow developers to download and configure dependencies during the setup of the build directory. The most commonly used types are:</p><ul><li><p><code>wrap-file</code>: The code comes from a tarball, for example.</p></li><li><p><code>wrap-git</code>: The code comes from a Git repository.</p></li></ul><p>This means there are several ways things could fail.</p><h3>wrap-file</h3>
+<p>For setting up this kind of wrap, the file must first be downloaded and then extracted.</p><p>The first part, the download, is done using <code>libcurl</code>.
+It's a great project with responsible maintainers, but as it's written mainly in C, it can still have typical vulnerabilities.
+(<a href="https://curl.se/docs/security.html">List of all curl CVEs</a>)
+So if there is, for example, a vulnerability in the handling of HTTP and an attacker makes <code>mesonlsp</code> download a file from a controlled server, it is possible that arbitrary code is executed or the language server is crashed.
+Furthermore, I don't automatically upgrade from HTTP to HTTPS, as I want to follow the user's wishes. (But that is open to debate.)</p><p>After the download has finished, the file must be extracted. <code>mesonlsp</code> uses <code>libarchive</code> for this purpose. It's an abstraction around a few file formats and compression algorithms. It has seen a <a href="https://cve.mitre.org/cgi-bin/cvekey.cgi?keyword=libarchive">few vulnerabilities</a> in the past, including remote code execution, such as in <a href="https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2024-20697">CVE-2024-20697</a>. Each dependency also has its own vulnerabilities.
+So if an attacker is capable of creating a crafted archive that allows overwriting files (using directory traversal due to bugs in my code) or triggers and exploits undefined behavior arbitrary code execution is possible.</p><h3>wrap-git</h3>
+<p>As I'm just executing a few Git commands, any vulnerability like <a href="https://nvd.nist.gov/vuln/detail/CVE-2021-21300">CVE-2021-21300</a> could cause arbitrary code execution or file overwrites.</p><h2 id="list-item-4">Risks of a compromised account</h2>
+<p>Suppose the worst-case scenario happened: my GitHub account was taken over, or my computer is controlled by an attacker. At the current stage of development, I'm the only maintainer for this low-traffic repository:</p><p><img src="img/MesonLSPSecurity/traffic.png" alt="Traffic"></p><p>On average, there are around 6 unique visitors every day, mostly coming from Google and GitHub. And as you can further see, most of the hits are on the README and the issues. So basically, nobody is looking through the code. And if the attacker was able to inject code and create a release, the following would happen:</p><ul><li><p>The Mason registry would be updated within the next 24 hours (e.g., <a href="https://github.com/mason-org/mason-registry/pull/5092">here</a>).</p></li><li><p>The <a href="https://scoop.sh/">Scoop registry</a> would be updated automatically (e.g., <a href="https://github.com/ScoopInstaller/Extras/commit/398e33dba41df607b68adc1bc4c3413dec999132">here</a>).</p></li><li><p>The COPR would be updated.</p></li><li><p>The VSCode extension would be updated. (Currently not implemented for the C++ version, but TBD.)</p></li></ul><p>The only human interaction is within the update of the VSCode extension. But as it only changes a version number and a few hashes,
+it wouldn't be suspicious at all and probably wouldn't cause any further review of the new distributed version.</p><p>At this point, probably more than 95% of all users would be infected, and that's it.
+Sure, the automated updates of everything are really cool (I would also do it), but it also shows how easily a compromised version could spread and cause damage.</p><p>Fedora users have it even worse: the attacker could even gain root access, as they have access to the RPM package and could simply execute post-install scripts as root.
+AUR users are impacted later, as I don't maintain the package, and with a bit of luck, the maintainer would see that the code has been tampered with.</p><h2 id="list-item-5">Mitigations</h2>
+<h3>General</h3>
+<p>In general, I made the decision to reduce the amount of pointer juggling and use <code>shared_ptr</code>s for basically everything (methods, AST, etc.). This reduces the number of possible mistakes and makes writing C++ feel like a garbage-collected language. The performance impact is probably noticeable, but currently, it's so fast that there is no optimization needed (for now, at least).</p><p>As part of my attempts to secure <code>mesonlsp</code>, I enabled a lot of compiler flags to harden the binary (<a href="https://gcc.gnu.org/onlinedocs/gcc/Instrumentation-Options.html">source</a>):</p><ul><li><p><code>-D_FORTIFY_SOURCE=3</code>: This is currently the highest level of fortifications, with checks at runtime.</p></li><li><p><code>-fstack-protector-strong</code>: This option makes the compiler emit code to check for buffer overflows, etc.</p></li><li><p><code>-fstack-clash-protection</code>: gcc only, so not on macOS.</p></li><li><p><code>-fcf-protection=full</code>: "Enable code instrumentation of control-flow transfers to increase program security by checking that target addresses of control-flow transfer instructions (such as indirect function call, function return, indirect jump) are valid. This prevents diverting the flow of control to an unexpected target. This is intended to protect against such threats as Return-oriented Programming (ROP), and similarly call/jmp-oriented programming (COP/JOP)."</p></li><li><p><code>-mshstk</code>: "Enables shadow stack built-in functions from x86 Control-flow Enforcement Technology (CET)." (<a href="https://gcc.gnu.org/onlinedocs/gcc-9.1.0/gcc/x86-Options.html">source</a>)</p></li><li><p><code>-Wl,-z,relro,-z,now</code>: "Reorder the ELF internal data sections to protect them from being overwritten in the event of a buffer-overflow" (<a href="https://www.redhat.com/en/blog/hardening-elf-binaries-using-relocation-read-only-relro">source</a>)</p></li></ul><p>Another way to find memory-safety bugs is to run sanitizers in CI. For each build type: <code>debug</code>, <code>plain</code>, <code>release</code>, I run tests and some other stuff with these sanitizers: <code>address</code>, <code>undefined</code>, <code>leak</code>, <code>address,undefined</code>. So all in all, I test <code>3 * 4 = 12</code> combinations. I'm aware that this will not find all bugs, as currently, my test coverage is far too low, but especially the lexer and the parser get "fuzzed" (in a very primitive manner, but it helped me find a few bugs already).</p><p>The last part of my efforts to secure <code>mesonlsp</code> is using static analysis tools: I use Sonarlint and <code>clang-tidy</code> to scan the codebase and find potential problems.
+I found a few problems, but these were always more related to code style and best practices, so I can't judge how much value they bring for my project from a security perspective. (In general, they are useful, but I'm not sure about my specific case.)</p><h3>Reducing the risks of a compromised account</h3>
+<p>My GitHub account is protected with 2FA and uses a long, securely generated password. The only systems where my GitHub account is active are:</p><ul><li><p>My personal laptop: Uses Fedora 39 with Full-Disk-Encryption and Secure Boot. <code>fwupdmgr security</code> gives me a security level of <code>HSI:0!</code>:</p></li></ul><p><img src="img/MesonLSPSecurity/fwupdmgr.png" alt="fwupdmgr"></p><p>Only the BIOS is a bit behind, because sadly my vendor (HP) doesn't integrate with <code>fwupd</code> for this kind of laptop.</p><ul><li><p>My smartphone: I use a rooted smartphone with the GitHub app installed. Sadly, I'm a bit behind with system updates on my phone because I don't get system updates as long as I have root access. I think in the worst-case scenario that my GitHub account is compromised, it would be due to a vulnerability on my phone. (Assuming I don't download shady software on either device.)</p></li></ul><h3>Mitigating vulnerabilities in dependencies</h3>
+<h4>Linux</h4>
+<p>The COPR and the AUR package are mostly statically linked, so if there's a vulnerability in a dependency, a normal system update should be enough.
+In case one of the few statically linked dependencies has a vulnerability, it still requires an update done by me.</p><p>The statically linked binary contains all dependencies, so that means in case of a vulnerability, I must create a new release.</p><h4>macOS</h4>
+<p>The binary is statically linked, except for a few system libraries:</p><pre><code>	/usr/lib/libiconv.2.dylib (compatibility version 7.0.0, current version 7.0.0)
+	/usr/lib/libbz2.1.0.dylib (compatibility version 1.0.0, current version 1.0.8)
+	/usr/lib/libcurl.4.dylib (compatibility version 7.0.0, current version 9.0.0)
+	/usr/lib/libc++.1.dylib (compatibility version 1.0.0, current version 1600.151.0)
+	/usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1336.0.0)
+</code></pre><p>So it would depend on the library that is vulnerable.</p><h4>Windows</h4>
+<p>I ship all dependencies as DLLs, so it would still require me to push an update, as Windows doesn't have the concept of <code>/usr</code>.</p><h2 id="list-item-6">Possible improvements</h2>
+<p>At least for all of those vulnerabilities based on an attacker-controlled project,
+there is basically only one solution to reduce the number: rewriting in Rust.
+I wanted to do that initially, but decided to move to C++ instead. Maybe as a compromise, I could write critical components in Rust (e.g., the Lexer), but that would make the build more complex.
+Furthermore, I could look into replacing critical dependencies like libcurl and libarchive with pure Rust alternatives - as long as they expose a C(++) interface.
+Long-term, I think the solution will be Rust. I may not rewrite it this year or next year. But I don't know what I will do in 2026 or later.</p><p>Furthermore, I have to make it easier to see which version of a dependency was statically linked into a binary.
+I already create an <code>env.txt</code> file for releases, but these are basically just a dump of the package manager state.
+I think adding an overview to my GitHub Pages website and automatically updating it during the creation of the release would make it even easier.</p><h3>Reducing the attack surface further.</h3>
+<p>The download of subprojects could be moved into one or several different processes.
+For example, the process to download only needs to access the directory <code>~/.cache/c++-mesonlsp/downloadCache/</code> and the internet.
+You could probably use technologies like Landlock and/or Bubblewrap to restrict writes to this directory only.
+The extraction process should only be able to access the directories <code>~/.cache/c++-mesonlsp/downloadCache</code>, <code>~/.cache/c++-mesonlsp/wrapsWorkspace</code>, and all those patch directories in <code>subprojects/</code>.</p><h2 id="list-item-7">Fazit</h2>
+<p>The entire FLOSS ecosystem relies on a lot of trust and a bit of verification.
+I trust that the binaries from Homebrew, MSYS2, and Alpine Linux are genuine and not tampered with. They must trust upstream that the source they get isn't tampered with.
+Upstream must trust their dependencies, and so on. But the second trust is broken, the entire chain potentially falls apart.
+We trusted xz, a malicious entity added a backdoor, it got packaged, some adventurous users installed it. Only by chance, the backdoor was uncovered. Only thanks to a few distribution maintainers, it got delayed due to a few valgrind errors.</p><p>Sure, some scenarios for potential vulnerabilities I outlined are a bit hand-wavy or hard to exploit,
+but they are still valid attack vectors to compromise systems. Furthermore, my language server is still quite obscure, so attackers probably don't even know it exists.
+How many of you are auditing their dependencies? I'm sure at least a few do at least skim parts of the code, as full audits would take weeks to months and probably don't make sense outside of a few use cases.
+But how many of you are auditing their toolchains? I would assume that not that many people always check the code of the tools they use, e.g., the build system or language server. But if such vulnerability exists and
+is known by an attacker, it could have a huge impact.</p><p>There is no such thing as absolute security. A determined attacker can - given enough time - always compromise a system. They only have to be lucky once, while the defenders have to be lucky all the time.
+But we can make it more difficult for the attacker to make inviable for the most drive-by attackers.</p></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>
