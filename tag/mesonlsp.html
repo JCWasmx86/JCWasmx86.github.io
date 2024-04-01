@@ -21,6 +21,25 @@
     <title>
         Blogposts with tag mesonlsp
     </title>
+    <style>
+        body {
+            counter-reset: section;
+        }
+
+        h2 {
+            counter-reset: subsection;
+        }
+
+        h2::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+        }
+
+        h3::before {
+            counter-increment: subsection;
+            content: counter(section) "." counter(subsection) ". ";
+        }
+    </style>
 </head>
 
 <body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
