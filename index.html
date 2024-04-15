@@ -39,6 +39,14 @@
             counter-increment: subsection;
             content: counter(section) "." counter(subsection) ". ";
         }
+
+        blockquote::before {
+            content: open-quote;
+        }
+
+        blockquote::after {
+            content: close-quote;
+        }
     </style>
 </head>
 
@@ -71,7 +79,7 @@
             
             <div class="col-8" style="position: relative; overflow-y: scroll;">
                 
-                <h1>Welcome to JCWasmx86's blog</h1><ul><li>31.March 2024: <a href="/2024/MesonLSPSecurity.html">MesonLSP and Security</a></li><li>13.March 2024: <a href="/2024/C++Rewrite.html">Swift-MesonLSP 4.x</a></li><li>05.November 2023: <a href="/2023/SolvingLSPProblems.html">Writing a meson language server -- Addressing my issues</a></li></ul>
+                <h1>Welcome to JCWasmx86's blog</h1><ul><li>15.April 2024: <a href="/2024/Vuln.html">The first mesonlsp vulnerability</a></li><li>31.March 2024: <a href="/2024/MesonLSPSecurity.html">MesonLSP and Security</a></li><li>13.March 2024: <a href="/2024/C++Rewrite.html">Swift-MesonLSP 4.x</a></li></ul>
             </div>
         </div>
     </div>

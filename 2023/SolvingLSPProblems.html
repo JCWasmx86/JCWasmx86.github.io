@@ -39,6 +39,14 @@
             counter-increment: subsection;
             content: counter(section) "." counter(subsection) ". ";
         }
+
+        blockquote::before {
+            content: open-quote;
+        }
+
+        blockquote::after {
+            content: close-quote;
+        }
     </style>
 </head>
 
@@ -75,10 +83,10 @@
             <div class="col-8" style="position: relative; overflow-y: scroll;">
                  <a href="/tag/Swift-MesonLSP.html">
             <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
-        </a> <a href="/tag/Swift.html">
-            <span class="badge rounded-pill bg-secondary me-1">Swift</span>
         </a> <a href="/tag/meson.html">
             <span class="badge rounded-pill bg-secondary me-1">meson</span>
+        </a> <a href="/tag/Swift.html">
+            <span class="badge rounded-pill bg-secondary me-1">Swift</span>
         </a><br/>
                 <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Writing a meson language server -- Addressing my issues</h1>
 <p>This will be a post for my <a href="https://github.com/JCWasmx86/Swift-MesonLSP">meson language server</a> detailing which problems I encountered and how I solved them. And I will outline the future of Swift-MesonLSP.</p><h2 id="list-item-1">Problems</h2>

