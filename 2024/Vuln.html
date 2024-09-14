@@ -53,7 +53,7 @@
 <body data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-offset="0">
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">JCWasmx86's blog</a>
+            <a class="navbar-brand" href="/index.html">JCWasmx86's blog</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -76,15 +76,11 @@
 
     <div class="container mt-5">
         <div class="row">
-            
-            <div class="col-2" style="position: sticky; top: 0; height: 100%;">
-            <div id="scrollspy-list" class="list-group"><a class="list-group-item list-group-item-action" href="#list-item-0"><b>The first mesonlsp vulnerability</b></a><a class="list-group-item list-group-item-action" href="#list-item-1">Introduction</a><a class="list-group-item list-group-item-action" href="#list-item-2">PoC</a><a class="list-group-item list-group-item-action" href="#list-item-3">Effects</a><a class="list-group-item list-group-item-action" href="#list-item-4">Mitigations</a><a class="list-group-item list-group-item-action" href="#list-item-5">Why request a CVE?</a><a class="list-group-item list-group-item-action" href="#list-item-6">Timeline</a><a class="list-group-item list-group-item-action" href="#list-item-7">Links</a></div></div>
-            
-            <div class="col-8" style="position: relative; overflow-y: scroll;">
-                 <a href="/tag/IT-Security.html">
-            <span class="badge rounded-pill bg-secondary me-1">IT-Security</span>
-        </a> <a href="/tag/mesonlsp.html">
+            <div class="col-12" style="position: relative; overflow-y: scroll;">
+                 <a href="/tag/mesonlsp.html">
             <span class="badge rounded-pill bg-secondary me-1">mesonlsp</span>
+        </a> <a href="/tag/IT-Security.html">
+            <span class="badge rounded-pill bg-secondary me-1">IT-Security</span>
         </a><br/>
                 <div data-bs-spy="scroll" data-bs-target="#scrollspy-list" data-bs-smooth-scroll="true" class="scrollspy-example" tabindex="0" style="overflow-y: scroll;"><h1 id="list-item-0">The first mesonlsp vulnerability</h1>
 <h2 id="list-item-1">Introduction</h2>
@@ -128,7 +124,7 @@ where probably the majority doesn't even know that my code is running on their s
 It's the strongest signal a software developer can send to their users, conveying the message: "If you don't update now, you could face serious consequences."
 If you use <code>vscode-meson</code> you are safe. If you use <code>neovim</code> or <code>mason</code>, you are safe. If you use the <a href="https://copr.fedorainfracloud.org/coprs/jcwasmx86/Swift-MesonLSP/">COPR</a>, install the package <code>mesonlsp</code> and uninstall <code>Swift-MesonLSP</code>.
 If you use the AUR package, please migrate to the <a href="https://aur.archlinux.org/packages/mesonlsp"><code>mesonlsp</code></a> package.</p><h2 id="list-item-6">Timeline</h2>
-<ul><li><p>Evening of March 31st, 2024: Discovered a vulnerability in <code>mesonlsp</code>.</p></li><li><p>Evening of March 31st, 2024: Began writing the security advisory and a patch. Special thanks to <a href="https://tristan.partin.io/">Tristan Partin</a> for reviewing it. Initially, only the C++ version was assumed to be vulnerable.</p></li><li><p>Morning of April 1st, 2024: Discovered that <code>Swift-MesonLSP</code> is also vulnerable.</p></li><li><p>Evening of April 1st, 2024: Released patches and created <code>4.1.4</code>. Unfortunately, a part of the patch (adding <code>ARCHIVE_EXTRACT_SECURE_SYMLINKS</code> to the <code>archive_write_disk_set_options</code> call) caused the CI on macOS to fail. For now, only <code>ARCHIVE_EXTRACT_SECURE_NODOTDOT</code> has been added. After resolving this, I noticed errors in the updated RPM <code>.spec</code> file that weren't caught during the code review. Additionally, macOS suddenly had a functioning <code>&lt;format&gt;</code> header, causing a few compiler errors. By the time these issues were fixed, I was at version <code>4.1.8</code>.</p></li><li><p>Evening of April 2nd, 2024: Updated my PR for the VSCode extension and contacted <a href="https://github.com/dcbaker">dcbaker</a> to disclose the vulnerability, as he's also the maintainer for vscode-meson.</p></li><li><p>Evening of April 3rd, 2024: Made the security advisory public.</p></li><li><p>Early Morning of April 10th, 2024: The vscode-meson PR was merged and a new release was published.</p></li><li><p>Morning of April 15th, 2024: I publish this blog post</p></li></ul><p>In retrospect, I believe my initial response to the vulnerability was swift. However, the time between making the advisory public and getting the vscode-meson PR merged could have been better managed, as a delay of 7 days is somewhat lengthy.</p><h2 id="list-item-7">Links</h2>
+<ul><li><p>Evening of March 31st, 2024: Discovered a vulnerability in <code>mesonlsp</code>.</p></li><li><p>Evening of March 31st, 2024: Began writing the security advisory and a patch. Special thanks to <a href="https://tristan.partin.io/">Tristan Partin</a> for reviewing it. Initially, only the C++ version was assumed to be vulnerable.</p></li><li><p>Morning of April 1st, 2024: Discovered that <code>Swift-MesonLSP</code> is also vulnerable.</p></li><li><p>Evening of April 1st, 2024: Released patches and created <code>4.1.4</code>. Unfortunately, a part of the patch (adding <code>ARCHIVE_EXTRACT_SECURE_SYMLINKS</code> to the <code>archive_write_disk_set_options</code> call) caused the CI on macOS to fail. For now, only <code>ARCHIVE_EXTRACT_SECURE_NODOTDOT</code> has been added. After resolving this, I noticed errors in the updated RPM <code>.spec</code> file that weren't caught during the code review. Additionally, macOS suddenly had a functioning <code>&lt;format&gt;</code> header, causing a few compiler errors. By the time these issues were fixed, I was at version <code>4.1.8</code>.</p></li><li><p>Evening of April 2nd, 2024: Updated my PR for the VSCode extension and contacted <a href="https://github.com/dcbaker">dcbaker</a> to disclose the vulnerability, as he's also the maintainer for vscode-meson.</p></li><li><p>Evening of April 3rd, 2024: Made the security advisory public.</p></li><li><p>Early Morning of April 10th, 2024: The vscode-meson PR was merged and a new release was published.</p></li><li><p>Evening of April 27th, 2024: I publish this blog post</p></li></ul><p>In retrospect, I believe my initial response to the vulnerability was swift. However, the time between making the advisory public and getting the vscode-meson PR merged could have been better managed, as a delay of 7 days is somewhat lengthy.</p><h2 id="list-item-7">Links</h2>
 <ul><li><p><a href="https://github.com/JCWasmx86/mesonlsp/security/advisories/GHSA-48c5-35fh-846h">Advisory</a></p></li><li><p><a href="https://cwe.mitre.org/data/definitions/22.html">CWE-22</a></p></li><li><p><a href="https://aur.archlinux.org/packages/mesonlsp">AUR</a></p></li><li><p><a href="https://copr.fedorainfracloud.org/coprs/jcwasmx86/Swift-MesonLSP/">COPR</a></p></li></ul></div>
             </div>
         </div>
